@@ -15,10 +15,14 @@
     "firebase": "^8.2.7",
     "firebase-admin": "^9.5.0",
     "framer-motion": "^3.3.0",
+    "lodash": "^4.17.21",
     "next": "10.0.6",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^6.15.3",
     "swr": "^0.4.2"
+  },
+  "prettier": {
+    "printWidth": 150
   }
 }
