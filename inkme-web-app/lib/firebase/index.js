@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth"; // If you need it
 import "firebase/firestore"; // If you need it
-import "firebase/functions"; // If you need it
 //TODO: Add firebase analytics
 
 const clientCredentials = {
@@ -20,4 +19,4 @@ if (!firebase.apps.length) {
 
 firebase.auth().useEmulator("http://localhost:9099");
 
-export default firebase;
+export { firebase };

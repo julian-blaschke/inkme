@@ -6,7 +6,7 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/hooks/*": ["lib/hooks/*"],
-      "@/firebase": ["firebase.js"]
+      "@/firebase/*": ["lib/firebase/*"]
     }
   },
   "exclude": ["node_modules", ".next"]

@@ -1,15 +1,16 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { ProvideAuth } from "../lib/hooks/useAuth.js";
-import NavBar from "../components/Navbar";
+import "styles/styles.css";
 
-function InkmeApp({ Component, pageProps }) {
+import NavBar from "@/components/Navbar";
+import { ProvideAuth } from "@/hooks/useAuth";
+
+export default function InkmeApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
-      <NavBar></NavBar>
       <ProvideAuth>
+        <NavBar></NavBar>
         <Component {...pageProps} />
       </ProvideAuth>
     </ChakraProvider>
   );
 }
-export default InkmeApp;

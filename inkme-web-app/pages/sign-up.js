@@ -32,7 +32,7 @@ const SignUp = () => {
           {/* username input */}
           <FormControl isRequired isInvalid={errors.username} isRequired>
             <FormLabel>Username</FormLabel>
-            <Input type="username" name="username" ref={register({ isRequired: true })}></Input>
+            <Input autoCapitalize={false} name="username" ref={register({ isRequired: true })}></Input>
             <FormHelperText>Your username will be publicly available.</FormHelperText>
           </FormControl>
           {/* email input */}
@@ -55,7 +55,7 @@ const SignUp = () => {
             <FormHelperText>Check this if you are working as a tattoo artist & want to use this site to promote your work.</FormHelperText>
           </FormControl>
           {error && <ErrorAlert message={error}></ErrorAlert>}
-          <Button type="submit" colorScheme="orange" isLoading={formState.isSubmitting}>
+          <Button type="submit" colorScheme="pink" isLoading={formState.isSubmitting}>
             Sign Up
           </Button>
         </Stack>
