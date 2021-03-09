@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, Link, Stack } from "@chakra-ui/react";
+import { Flex, IconButton, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import DarkModeToggle from "./DarkModeToggle";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,9 +14,11 @@ export default function NavBar() {
     toggle(false);
   }, []);
 
+  const menuBg = useColorModeValue("white", "black");
+
   return (
-    <Flex p={4} px={8} as="nav" align="center" justify="space-between" wrap="wrap" position="sticky">
-      <NextLink href="/">
+    <Flex as="nav" py={4} pt={3} px={8} as="nav" align="center" justify="space-between" wrap="wrap">
+      <NextLink href="/" prefetch>
         <Link>Home</Link>
       </NextLink>
       <Flex align="center">
@@ -24,28 +26,53 @@ export default function NavBar() {
       </Flex>
       <Stack
         isInline
-        spacing={{ md: "6", xl: "12" }}
+        spacing={{ base: "12" }}
         mt={{ base: "4", md: "0" }}
         width={{ base: "full", md: "auto" }}
         display={{ base: isOpen ? "flex" : "none", md: "flex" }}
-        justifyContent={{ base: "space-evenly", md: "flex-end" }}
+        justifyContent={{ base: "space-between", sm: "space-evenly", md: "flex-end" }}
         alignItems="center"
         flexGrow={1}
       >
-        <NextLink href="/artists">
+        <NextLink href="/artists" prefetch>
           <Link display="block">artists</Link>
         </NextLink>
-        <NextLink href="/blog">
+        <NextLink href="/blog" prefetch>
           <Link display="block">blog</Link>
         </NextLink>
-        {user ? (
-          <NextLink href="/dashboard">
-            <Link display="block">dashboard </Link>
-          </NextLink>
-        ) : (
-          <NextLink href="/sign-in">
+        {!user ? (
+          <NextLink href="/sign-in" prefetch>
             <Link display="block">sign in</Link>
           </NextLink>
+        ) : (
+          <Menu>
+            <MenuButton>Profile</MenuButton>
+            <MenuList bg={menuBg}>
+              <MenuGroup title="profile">
+                <NextLink href="/profile/settings">
+                  <MenuItem>settings</MenuItem>
+                </NextLink>
+                <NextLink href="/profile/security&privacy">
+                  <MenuItem>security & privacy</MenuItem>
+                </NextLink>
+              </MenuGroup>
+              <MenuDivider />
+              <MenuGroup title="shops & appointments">
+                <NextLink href="/profile/shops">
+                  <MenuItem>shops</MenuItem>
+                </NextLink>
+                <NextLink href="/profile/appointments">
+                  <MenuItem>appointments</MenuItem>
+                </NextLink>
+              </MenuGroup>
+              <MenuDivider />
+              <MenuGroup title="other">
+                <NextLink href="/profile/messages">
+                  <MenuItem>messages</MenuItem>
+                </NextLink>
+              </MenuGroup>
+            </MenuList>
+          </Menu>
         )}
         <DarkModeToggle />
       </Stack>

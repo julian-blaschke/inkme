@@ -10,10 +10,10 @@ import { useKeyPress, useKeyPressFocusInput } from "@/hooks/useKeyPress";
 
 const mockdata = [
   {
-    title: "hotgirltatooo",
+    title: "julian",
     subtitle: "owner at happyneedles",
     img: "https://news.berkeley.edu/wp-content/uploads/2019/02/JamesFrancoSmile300.jpg",
-    url: "/artists/hotgirltattoo",
+    url: "/artists/julian",
   },
   {
     title: "handpoke-princess",
@@ -47,7 +47,7 @@ export default function Artists() {
 
   return (
     <>
-      <Container px={8}>
+      <Container px={8} pb={8}>
         <Breadcrumbs></Breadcrumbs>
         <Heading>Artists & Shops</Heading>
         <FormControl py={8}>

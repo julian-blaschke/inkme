@@ -1,6 +1,5 @@
 import { Flex, Container, Heading } from "@chakra-ui/layout";
 
-import { DashboardSideBar } from "./DashboardSideBar";
 import { Breadcrumbs } from "./BreadCrumbs";
 
 export function DashboardLayout({ title, children }) {

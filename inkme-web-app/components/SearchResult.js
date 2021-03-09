@@ -1,11 +1,12 @@
-import { useKeyPress } from "@/hooks/useKeyPress";
+import { Flex, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
-import { Flex, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import { Stack } from "@chakra-ui/layout";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import Link from "next/link";
+
+import { useKeyPress } from "@/hooks/useKeyPress";
 
 export function SearchResult({ title, subtitle, img, url, isFocused }) {
   const bg = useColorModeValue("gray.100", "gray.700");
@@ -19,7 +20,7 @@ export function SearchResult({ title, subtitle, img, url, isFocused }) {
   }, [isPressed]);
 
   return (
-    <LinkBox as="article" tabIndex={0}>
+    <LinkBox as="article">
       <Stack
         direction="row"
         justify="space-between"

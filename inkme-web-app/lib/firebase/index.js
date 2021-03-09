@@ -15,8 +15,9 @@ const clientCredentials = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(clientCredentials);
-}
 
-firebase.auth().useEmulator("http://localhost:9099");
+  firebase.auth().useEmulator("http://localhost:9099");
+  firebase.firestore().useEmulator("localhost", 8080);
+}
 
 export { firebase };
