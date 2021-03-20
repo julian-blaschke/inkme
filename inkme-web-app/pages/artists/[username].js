@@ -2,36 +2,22 @@ import { Breadcrumbs } from "@/components/BreadCrumbs";
 import { IconButton } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Container, Divider, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
-import { Image } from "@chakra-ui/image";
+import { Progress } from "@chakra-ui/progress";
+import { Avatar } from "@chakra-ui/avatar";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 
 import { admin } from "@/firebase/admin";
-import { ListItem } from "@/components/ListItem";
-import { ListContainer } from "@/components/ListContainer";
 import { useRouter } from "next/router";
-import { Progress } from "@chakra-ui/progress";
-
-const mockdata = [
-  {
-    title: "hyperhumanttt",
-    subtitle: "owner since 1997",
-    img: "https://news.berkeley.edu/wp-content/uploads/2019/02/JamesFrancoSmile300.jpg",
-    url: "/artists/julian",
-  },
-  {
-    title: "permanent regret",
-    subtitle: "appreantice since 2009",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGuA0vvPAwFOnfVF_zRX_nbqisR_VO_XMtvg&usqp=CAU",
-    url: "/artists/handpoke-princess",
-  },
-];
+import { List } from "@/components/List";
+import { mapShops } from "lib/utils/mappers";
 
 export default function Artist({ artist }) {
   const router = useRouter();
+  const avatar = useColorModeValue("gray.100", "gray.900");
 
-  // If the page is not yet generated, this will be displayed
-  // initially until getStaticProps() finishes running
+  // If the page is not yet generated, this will be displayed initially until getStaticProps() finishes running
   if (router.isFallback) {
-    return <Progress size="xs" colorScheme="pink" isIndeterminate />;
+    return <Progress size="xs" colorScheme="blue" isIndeterminate />;
   }
 
   return (
@@ -43,56 +29,33 @@ export default function Artist({ artist }) {
             <Heading as="h1">{artist?.username}</Heading>
             <IconButton icon={<ChevronDownIcon />} size="sm" variant="ghost"></IconButton>
           </Stack>
-          <Text fontSize="sm" color="gray.500">
+          <Text fontSize="sm" color="gray.500" noOfLines={2} pr={8}>
             {artist?.bio || "this is my bio."}
           </Text>
         </Flex>
-        <Image src="https://news.berkeley.edu/wp-content/uploads/2019/02/JamesFrancoSmile300.jpg" height="14" width="14" borderRadius="100%"></Image>
+        <Avatar src={artist.photoURL} borderRadius="md" bg={avatar} />
       </Flex>
-      <Divider my={8} />
-      <Stack spacing={12}>
-        <ListContainer title="Working at">
-          {mockdata.map((data) => (
-            <ListItem
-              {...data}
-              key={data.title}
-              rightItem={
-                <Text fontSize="xs" color="gray.500">
-                  owner
-                </Text>
-              }
-            />
-          ))}
-        </ListContainer>
-        <ListContainer title="Upcoming Guest Spots">
-          {mockdata.map((data) => (
-            <ListItem
-              {...data}
-              key={data.title}
-              rightItem={
-                <Stack>
-                  <Text fontSize="xs" color="gray.500">
-                    24. Jan, 2021
-                  </Text>
-                </Stack>
-              }
-            />
-          ))}
-        </ListContainer>
-        <ListContainer title="Posts via Instagram"></ListContainer>
-      </Stack>
+      <Divider py={8} variant="dashed" />
+      <List title="shops" data={mapShops(artist.shops)}></List>
     </Container>
   );
 }
 
 export async function getStaticProps(context) {
+  // TODO: maybe replace with queries stored in the firebase directory & make error handling robust
   const { username } = context.params;
+  const db = admin.firestore();
 
-  const doc = admin.firestore().collection("artists").doc(username);
+  const doc = db.collection("artists").doc(username);
   const artist = await doc.get();
 
   if (!artist.exists) return { notFound: true };
-  return { props: { artist: { ...artist.data(), username: doc.id } } };
+
+  const docs = db.collection("shops").where("owner", "==", doc.id);
+  const data = await docs.get();
+  const shops = data.docs.map((d) => ({ ...d.data(), name: d.id }));
+
+  return { props: { artist: { ...artist.data(), username: doc.id, shops } } };
 }
 
 export async function getStaticPaths() {

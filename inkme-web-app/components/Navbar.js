@@ -18,7 +18,7 @@ export default function NavBar() {
 
   return (
     <Flex as="nav" py={4} pt={3} px={8} as="nav" align="center" justify="space-between" wrap="wrap">
-      <NextLink href="/" prefetch>
+      <NextLink href="/">
         <Link>Home</Link>
       </NextLink>
       <Flex align="center">
@@ -34,21 +34,21 @@ export default function NavBar() {
         alignItems="center"
         flexGrow={1}
       >
-        <NextLink href="/artists" prefetch>
+        <NextLink href="/artists">
           <Link display="block">artists</Link>
         </NextLink>
-        <NextLink href="/blog" prefetch>
+        <NextLink href="/blog">
           <Link display="block">blog</Link>
         </NextLink>
         {!user ? (
-          <NextLink href="/sign-in" prefetch>
+          <NextLink href="/sign-in">
             <Link display="block">sign in</Link>
           </NextLink>
         ) : (
           <Menu>
-            <MenuButton>Profile</MenuButton>
+            <MenuButton>profile</MenuButton>
             <MenuList bg={menuBg}>
-              <MenuGroup title="profile">
+              <MenuGroup fontSize="xs" title="profile">
                 <NextLink href="/profile/settings">
                   <MenuItem>settings</MenuItem>
                 </NextLink>
@@ -57,7 +57,7 @@ export default function NavBar() {
                 </NextLink>
               </MenuGroup>
               <MenuDivider />
-              <MenuGroup title="shops & appointments">
+              <MenuGroup fontSize="xs" title="shops & appointments">
                 <NextLink href="/profile/shops">
                   <MenuItem>shops</MenuItem>
                 </NextLink>
@@ -66,7 +66,7 @@ export default function NavBar() {
                 </NextLink>
               </MenuGroup>
               <MenuDivider />
-              <MenuGroup title="other">
+              <MenuGroup fontSize="xs" title="other">
                 <NextLink href="/profile/messages">
                   <MenuItem>messages</MenuItem>
                 </NextLink>

@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 export default function Settings() {
   const { profile } = useProfile();
 
-  if (!profile) return <Progress size="xs" colorScheme="pink" isIndeterminate />;
+  if (!profile) return <Progress size="xs" colorScheme="green" isIndeterminate />;
 
   return (
     <DashboardLayout title="Profile Settings">
@@ -24,7 +24,7 @@ function SettingsForm({ defaultValues }) {
   const onSubmit = async (values) => {
     try {
       let affected = 0;
-      for (let key in profile) {
+      for (let key in values) {
         if (profile[key] !== values[key]) affected++;
       }
       if (affected === 0) throw new Error("no values changed!");
@@ -39,7 +39,7 @@ function SettingsForm({ defaultValues }) {
         status: "success",
       });
     } catch ({ message }) {
-      toast({ title: "something went wrong...", description: message, status: "warning", isClosable: true, position: "bottom-right" });
+      toast({ title: "something went wrong...", description: message, status: "error", isClosable: true, position: "bottom-right" });
     }
   };
 
@@ -72,7 +72,7 @@ function SettingsForm({ defaultValues }) {
           <Switch name="useInstagramProfilePicture" ref={register()} size="lg"></Switch>
           <FormHelperText>use my instagram profile picture also as my ink.me profile picture.</FormHelperText>
         </FormControl>
-        <Button type="submit" isLoading={formState.isSubmitting}>
+        <Button type="submit" colorScheme="blue" isLoading={formState.isSubmitting}>
           save
         </Button>
       </Stack>
