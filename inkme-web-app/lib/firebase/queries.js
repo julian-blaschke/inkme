@@ -1,18 +1,51 @@
 import { firebase } from "@/firebase/index";
 
-/**
- * query firestore for artists
- *
- * @param {string} search shops have to contain this search string
- * @param {number} limit maximum number of documents we want to limit this query to
- * @returns {array} an array of artists (or empty array if none were found)
- */
-export async function getArtists(search = "", limit = 5) {
+export async function getArtistByUsername(username) {
+  if (!username) return;
   const db = firebase.firestore();
-  const query = db.collection("artists");
-  if (search) {
-    query.where(firebase.firestore.FieldPath.documentId(), ">=", search);
-  }
-  const res = await query.limit(limit).get();
-  return res.docs.map((d) => ({ ...d.data(), username: d.id }));
+  //TODO: make checks for provided arg `username`
+  const doc = db.collection("artists").doc(username);
+  const artist = await doc.get();
+  if (!artist.exists) return;
+  return { ...artist.data(), username: doc.id };
+}
+
+export async function getInvites(shop) {
+  const db = firebase.firestore();
+  const docs = await db.collection("shops").doc(shop).collection("invites").get();
+  const invites = docs.docs.map((doc) => doc.data());
+  return invites;
+}
+
+export function ALL_ARTISTS(username) {
+  const db = firebase.firestore();
+  if (!username) return;
+  return db
+    .collection("artists")
+    .where(firebase.firestore.FieldPath.documentId(), ">=", username)
+    .where(firebase.firestore.FieldPath.documentId(), "<=", username + "\uf8ff");
+}
+
+export function SHOP_ARTISTS(usernames) {
+  const db = firebase.firestore();
+  if (!usernames) return;
+  return db.collection("artists").where(firebase.firestore.FieldPath.documentId(), "in", usernames);
+}
+
+export function MY_SHOPS(username) {
+  const db = firebase.firestore();
+  if (!username) return;
+  return db.collection("shops").where("artists", "array-contains", username);
+}
+
+export function SHOP(name) {
+  const db = firebase.firestore();
+  if (!name) return;
+  return db.collection("shops").doc(name);
+}
+
+export function ALL_INVITES(shop) {
+  const db = firebase.firestore();
+  if (!shop) return;
+  return db.collection("shops").doc(shop).collection("invites");
 }

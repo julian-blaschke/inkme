@@ -51,11 +51,11 @@ export async function getStaticProps(context) {
 
   if (!artist.exists) return { notFound: true };
 
-  const docs = db.collection("shops").where("owner", "==", doc.id);
+  const docs = db.collection("shops").where("artists", "array-contains", doc.id);
   const data = await docs.get();
   const shops = data.docs.map((d) => ({ ...d.data(), name: d.id }));
 
-  return { props: { artist: { ...artist.data(), username: doc.id, shops } } };
+  return { props: { artist: { ...artist.data(), username: doc.id, shops } }, revalidate: 60 };
 }
 
 export async function getStaticPaths() {

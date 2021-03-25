@@ -1,12 +1,15 @@
-import { Flex, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
+import { Badge, Flex, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Stack } from "@chakra-ui/layout";
 import Link from "next/link";
 import { Avatar } from "@chakra-ui/avatar";
+import { Skeleton } from "@chakra-ui/skeleton";
 
-export function ListItem({ title, subtitle, img, url, rightItem }) {
+export function ListItem({ title, subtitle, img, url, badge }) {
   const bg = useColorModeValue("gray.100", "gray.900");
-  const border = useColorModeValue("blue.300", "blue.800");
+  //TODO: make border color of listitems unique to their privacy status (owned, private, public...)
+  //TODO: write FAQ on color codes for listitems & what they mean
+  const border = useColorModeValue("pink.300", "pink.800");
 
   return (
     <LinkBox as="article">
@@ -36,8 +39,16 @@ export function ListItem({ title, subtitle, img, url, rightItem }) {
             </Text>
           </Flex>
         </Stack>
-        <Flex>{rightItem}</Flex>
+        <Flex>{badge && <Badge colorScheme={badge.colorScheme}>{badge.content}</Badge>}</Flex>
       </Stack>
     </LinkBox>
+  );
+}
+
+export function ListItemSkeleton() {
+  return (
+    <Skeleton>
+      <ListItem></ListItem>
+    </Skeleton>
   );
 }

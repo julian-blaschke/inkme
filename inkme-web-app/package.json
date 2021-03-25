@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "export FIRESTORE_EMULATOR_HOST=\"localhost:8080\" && next dev",
+    "dev": "export FIRESTORE_EMULATOR_HOST=\"localhost:8090\" && next dev",
     "build": "next build",
     "start": "next start"
   },

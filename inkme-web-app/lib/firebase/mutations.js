@@ -12,5 +12,17 @@ export async function createShop({ name, address, instagram, owner }) {
   const doc = db.collection("shops").doc(name);
   if ((await doc.get()).exists) throw new Error(`shop with name "${name}" already exists.`);
 
-  return doc.set({ address, instagram, owner });
+  return doc.set({ address, instagram, artists: [owner], owner });
+}
+
+/**
+ * creates an invite in firestore under a shop collection
+ *
+ * @param {object} invite to create
+ * @returns {Promise} of the save operation
+ */
+export async function createInvite({ inviter, invitee, role, shop, date = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }) {
+  const db = firebase.firestore();
+  const doc = db.collection("shops").doc(shop).collection("invites").doc(invitee);
+  return doc.set({ inviter, role, date, status });
 }

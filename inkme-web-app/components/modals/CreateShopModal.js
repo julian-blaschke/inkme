@@ -25,7 +25,7 @@ export function CreateShopModal() {
 
   async function onSubmit(values) {
     try {
-      await createShop({ ...values, owner: user.uid });
+      await createShop({ ...values, owner: user?.uid });
       toast({
         title: `shop "${values.name}" sucessfully created.`,
         description: `we added ${values.name} to your shops. you can also send out invites to artists, that are working there.`,
