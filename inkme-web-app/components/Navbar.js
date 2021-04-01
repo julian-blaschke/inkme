@@ -5,6 +5,7 @@ import { Flex, IconButton, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuI
 
 import DarkModeToggle from "./DarkModeToggle";
 import { useAuth } from "@/hooks/useAuth";
+import { useMenuBackgroundValue } from "@/hooks/useColorModeValue";
 
 export default function NavBar() {
   const [isOpen, toggle] = useState(false);
@@ -14,7 +15,7 @@ export default function NavBar() {
     toggle(false);
   }, []);
 
-  const menuBg = useColorModeValue("white", "black");
+  const bg = useMenuBackgroundValue();
 
   return (
     <Flex as="nav" py={4} pt={3} px={8} as="nav" align="center" justify="space-between" wrap="wrap">
@@ -47,7 +48,7 @@ export default function NavBar() {
         ) : (
           <Menu>
             <MenuButton>profile</MenuButton>
-            <MenuList bg={menuBg}>
+            <MenuList bg={bg}>
               <MenuGroup fontSize="xs" title="profile">
                 <NextLink href="/profile/settings">
                   <MenuItem>settings</MenuItem>
