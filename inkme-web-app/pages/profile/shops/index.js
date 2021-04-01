@@ -9,14 +9,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { MY_SHOPS } from "@/firebase/queries";
 import { useMemo } from "react";
 
-export default function Messages() {
-  console.log("rerender");
+export default function Shops() {
   const { user } = useAuth();
   const shopsRef = useMemo(() => MY_SHOPS(user?.uid), [user]);
   const [shops, isLoading] = useCollection(shopsRef, "name");
 
   return (
-    <DashboardLayout title="Shops">
+    <DashboardLayout title="Shops 🛋" subtitle="where we come together.">
       <List title="my shops" data={mapShops(shops)} isLoading={isLoading}></List>
       <Center py={4}>
         <CreateShopModal />

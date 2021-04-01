@@ -55,7 +55,7 @@ export function InviteArtistsToShopModal({ shop }) {
 
   return (
     <Center py={4}>
-      <Button variant="outline" colorScheme="blue" size="xs" leftIcon={<SmallAddIcon />} onClick={onOpen}>
+      <Button variant="link" size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
         Send invite
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>

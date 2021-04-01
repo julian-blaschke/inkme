@@ -11,12 +11,13 @@ const config = {
 const styles = {
   global: (props) => ({
     body: {
-      color: mode("gray.800", "whiteAlpha.900")(props),
-      bg: mode("white", "black")(props),
+      color: mode("gray.900", "whiteAlpha.900")(props),
+      bg: mode("gray.100", "gray.900")(props),
     },
   }),
 };
 
 // 3. extend the theme
 const theme = extendTheme({ config, styles });
+theme.shadows.outline = "pink.300";
 export default theme;

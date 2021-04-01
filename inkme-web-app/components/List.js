@@ -1,10 +1,10 @@
 import { Box, Center, Stack, Text } from "@chakra-ui/layout";
 import { CenteredSpinner } from "./CenteredSpinner";
-import { ListItem, ListItemSkeleton } from "./ListItem";
+import { ListItem } from "./ListItem";
 
-export function List({ title, data, isLoading }) {
+export function List({ title, data, isLoading, emptyMessage }) {
   return (
-    <Box mt={8}>
+    <Box mt={8} id={title?.replace(/\s/g, "")}>
       <Text my={4} fontSize="sm" color="gray.500">
         {title}
       </Text>
@@ -16,7 +16,7 @@ export function List({ title, data, isLoading }) {
         ) : (
           <Center py={4}>
             <Text color="gray.500" fontSize="sm">
-              empty list.
+              {emptyMessage || "list is empty 🤷."}
             </Text>
           </Center>
         )}

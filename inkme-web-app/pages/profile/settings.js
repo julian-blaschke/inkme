@@ -7,10 +7,10 @@ import { useForm } from "react-hook-form";
 export default function Settings() {
   const { profile } = useProfile();
 
-  if (!profile) return <Progress size="xs" colorScheme="green" isIndeterminate />;
+  if (!profile) return <Progress size="xs" colorScheme="pink" isIndeterminate />;
 
   return (
-    <DashboardLayout title="Profile Settings">
+    <DashboardLayout title="Profile Settings 🔧" subtitle="manage your account preferences.">
       <SettingsForm defaultValues={profile} />
     </DashboardLayout>
   );
@@ -69,10 +69,10 @@ function SettingsForm({ defaultValues }) {
         </FormControl>
         <FormControl>
           <FormLabel>Use Instagram Profile Picture</FormLabel>
-          <Switch name="useInstagramProfilePicture" ref={register()} size="lg"></Switch>
+          <Switch name="useInstagramProfilePicture" ref={register()} size="lg" colorScheme="pink"></Switch>
           <FormHelperText>use my instagram profile picture also as my ink.me profile picture.</FormHelperText>
         </FormControl>
-        <Button type="submit" colorScheme="blue" isLoading={formState.isSubmitting}>
+        <Button type="submit" colorScheme="pink" isLoading={formState.isSubmitting}>
           save
         </Button>
       </Stack>

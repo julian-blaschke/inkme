@@ -6,7 +6,10 @@ function mapDocument(doc, idField) {
 
 export function useCollection(col, idField = "id") {
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (!col) return false;
+    return true;
+  });
 
   //listen for changes of either path or idField
   useEffect(() => {

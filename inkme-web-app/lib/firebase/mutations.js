@@ -24,5 +24,13 @@ export async function createShop({ name, address, instagram, owner }) {
 export async function createInvite({ inviter, invitee, role, shop, date = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }) {
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(shop).collection("invites").doc(invitee);
+  if ((await doc.get()).exists) throw new Error(`${invitee} has already been invited!`);
   return doc.set({ inviter, role, date, status });
+}
+
+export async function UPDATE_SHOP(name, values) {
+  const db = firebase.firestore();
+  const doc = db.collection("shops").doc(name);
+  if (!(await doc.get()).exists) throw new Error(`shop '${name}' does not exist.`);
+  return doc.update({ ...values });
 }

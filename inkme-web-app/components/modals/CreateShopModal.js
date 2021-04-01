@@ -21,7 +21,6 @@ export function CreateShopModal() {
     defaultValues: { name: "tats for rats", address: "Vienna, Austria", instagram: "tats4rats" },
   });
   const toast = useToast();
-  const bg = useColorModeValue("white", "gray.900");
 
   async function onSubmit(values) {
     try {
@@ -41,12 +40,12 @@ export function CreateShopModal() {
 
   return (
     <Center>
-      <Button variant="outline" colorScheme="blue" size="xs" leftIcon={<SmallAddIcon />} onClick={onOpen}>
-        create shop
+      <Button variant="link" size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
+        create a new shop
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent mx={4} bg={bg}>
+        <ModalContent mx={4}>
           <ModalHeader>Create a new shop</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

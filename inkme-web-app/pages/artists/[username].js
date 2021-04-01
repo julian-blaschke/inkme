@@ -29,8 +29,8 @@ export default function Artist({ artist }) {
             <Heading as="h1">{artist?.username}</Heading>
             <IconButton icon={<ChevronDownIcon />} size="sm" variant="ghost"></IconButton>
           </Stack>
-          <Text fontSize="sm" color="gray.500" noOfLines={2} pr={8}>
-            {artist?.bio || "this is my bio."}
+          <Text fontSize="sm" color="gray" noOfLines={2} pr={8}>
+            {artist?.bio}
           </Text>
         </Flex>
         <Avatar src={artist.photoURL} borderRadius="md" bg={avatar} />

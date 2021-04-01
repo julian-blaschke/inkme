@@ -32,6 +32,15 @@ export function SHOP_ARTISTS(usernames) {
   return db.collection("artists").where(firebase.firestore.FieldPath.documentId(), "in", usernames);
 }
 
+export function ALL_SHOPS(name) {
+  const db = firebase.firestore();
+  if (!name) return;
+  return db
+    .collection("shops")
+    .where(firebase.firestore.FieldPath.documentId(), ">=", name)
+    .where(firebase.firestore.FieldPath.documentId(), "<=", name + "\uf8ff");
+}
+
 export function MY_SHOPS(username) {
   const db = firebase.firestore();
   if (!username) return;

@@ -56,9 +56,5 @@ export function mapInvites(invites) {
  */
 export function mapInvite({ inviter, invitee, role, date = new Date(), status }) {
   const statusMap = { accepted: "green", rejected: "red", pending: "orange" };
-  return {
-    title: invitee,
-    subtitle: `as ${role} - invited by ${inviter} on ${date?.toDate().toLocaleDateString()}`,
-    badge: { colorScheme: statusMap[status], content: status },
-  };
+  return { title: invitee, subtitle: `as ${role}`, badge: { colorScheme: statusMap[status], content: status } };
 }

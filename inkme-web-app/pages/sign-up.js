@@ -32,7 +32,7 @@ const SignUp = () => {
           {/* username input */}
           <FormControl isRequired isInvalid={errors.username} isRequired>
             <FormLabel>Username</FormLabel>
-            <Input autoCapitalize={false} name="username" ref={register({ isRequired: true })}></Input>
+            <Input autoCorrect="off" name="username" ref={register({ isRequired: true })}></Input>
             <FormHelperText>Your username will be publicly available.</FormHelperText>
           </FormControl>
           {/* email input */}
