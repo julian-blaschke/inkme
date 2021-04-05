@@ -18,14 +18,5 @@ export function useProfile() {
     }
   }, [user]);
 
-  const update = useCallback(
-    async (fields) => {
-      const doc = db.collection("artists").doc(user.uid);
-      await doc.update({ ...profile, ...fields });
-      setProfile((p) => ({ ...p, ...fields }));
-    },
-    [profile]
-  );
-
-  return { profile, isLoading, update };
+  return { profile, isLoading };
 }

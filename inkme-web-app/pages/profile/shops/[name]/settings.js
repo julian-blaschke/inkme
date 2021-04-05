@@ -6,6 +6,7 @@ import { useCollection, useDocument } from "@/firebase/hooks";
 import { UPDATE_SHOP } from "@/firebase/mutations";
 import { ALL_INVITES, SHOP } from "@/firebase/queries";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
+import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
@@ -30,7 +31,7 @@ export default function ShopSettings() {
     <DashboardLayout title="Settings 🔧" subtitle={`manage shop preferences for ${name}.`}>
       {shop ? <ShopSettingsForm defaultValues={shop} /> : <CenteredSpinner />}
       <Divider variant="dashed" pb="4" />
-      <List title="active invites" data={mapInvites(invites)} isLoading={invitesLoading}></List>
+      <List title="invites for this shop" data={mapInvites(invites)} isLoading={invitesLoading}></List>
       {!invitesLoading && <InviteArtistsToShopModal shop={name} />}
     </DashboardLayout>
   );
@@ -76,10 +77,10 @@ function ShopSettingsForm({ defaultValues }) {
         </FormControl>
         <FormControl>
           <FormLabel>Use Instagram Profile Picture</FormLabel>
-          <Switch name="useInstagramProfilePicture" ref={register()} size="lg" colorScheme="teal"></Switch>
+          <Switch name="useInstagramProfilePicture" ref={register()} size="lg" colorScheme={primaryColorScheme}></Switch>
           <FormHelperText>use my instagram profile picture also as my ink.me profile picture.</FormHelperText>
         </FormControl>
-        <Button type="submit" colorScheme="teal" isLoading={formState.isSubmitting}>
+        <Button type="submit" colorScheme={primaryColorScheme} isLoading={formState.isSubmitting}>
           save
         </Button>
       </Stack>

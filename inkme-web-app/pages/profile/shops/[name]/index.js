@@ -21,7 +21,7 @@ export default function Shop() {
 
   return (
     <DashboardLayout title={name} menu={<ShopMenu name={name} />}>
-      <List title="coworkers here" data={mapArtists(artists)?.filter((artist) => artist.username == user?.uid)} isLoading={artistsLoading}></List>
+      <List title="coworkers here" data={mapArtists(artists?.filter((a) => a.username !== user.uid))} isLoading={artistsLoading}></List>
     </DashboardLayout>
   );
 }

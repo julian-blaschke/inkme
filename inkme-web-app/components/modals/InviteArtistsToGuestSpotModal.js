@@ -1,20 +1,23 @@
-import { CREATE_INVITE } from "@/firebase/mutations";
+import { CREATE_GUESTSPOT } from "@/firebase/mutations";
 import { getArtistByUsername } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebouncedHandler } from "@/hooks/useDebouncedHandler";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
+import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { CheckIcon, SmallAddIcon, WarningIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Center } from "@chakra-ui/layout";
+import { Center, Flex } from "@chakra-ui/layout";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
-import { Select } from "@chakra-ui/select";
 import { Spinner } from "@chakra-ui/spinner";
+import { format } from "date-fns";
 import { useState } from "react";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 
-export function InviteArtistsToShopModal({ shop }) {
+export function InviteArtistsToGuestSpotModal({ shop }) {
   const { user } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -23,12 +26,17 @@ export function InviteArtistsToShopModal({ shop }) {
 
   const [value, setValue] = useState("");
   const [artist, setArtist] = useState();
-  const [role, setRole] = useState("co-owner");
+  const [range, setRange] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  let footer = "Please pick the first day.";
+  if (range?.from && !range?.to) footer = "Please pick the last day.";
+  if (range?.from && range?.to) footer = `${format(range?.from, "PPP")}–${format(range?.to, "PPP")}`;
+
   async function onChange(username) {
     const artist = await getArtistByUsername(username);
+    //TODO: make a tooltip to suggest looking them up on inkme too see if they even have an inkme account
     setArtist(artist ? artist.username : undefined);
     setIsLoading(false);
   }
@@ -37,8 +45,8 @@ export function InviteArtistsToShopModal({ shop }) {
   async function onSubmit() {
     try {
       setIsSubmitting(true);
-      await CREATE_INVITE({ inviter: user.uid, invitee: artist, role, shop });
-      successToast({ description: `we sent an invite to ${artist}. As soon as they accept your invite, they will be listed under this shop.` });
+      await CREATE_GUESTSPOT(shop, { inviter: user?.uid, artist, range });
+      successToast({ description: `we sent an invite to ${artist}.` });
       onClose();
     } catch ({ message }) {
       errorToast({ description: message });
@@ -54,8 +62,8 @@ export function InviteArtistsToShopModal({ shop }) {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add other artists to this shop</ModalHeader>
+        <ModalContent mx={4}>
+          <ModalHeader>Invite an artist to Guest Spot</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
@@ -74,23 +82,28 @@ export function InviteArtistsToShopModal({ shop }) {
                 ></Input>
                 <InputRightElement
                   children={
-                    isLoading ? <Spinner size="sm" color="blue.500" /> : artist ? <CheckIcon color="green.500" /> : <WarningIcon color="red.500" />
+                    isLoading ? (
+                      <Spinner size="sm" color="blue.500" />
+                    ) : artist ? (
+                      <CheckIcon color="green.500" />
+                    ) : value ? (
+                      <WarningIcon color="red.300" />
+                    ) : null
                   }
                 />
               </InputGroup>
               <FormHelperText>type in the artists username on ink.me or copy & paste it from their public profile</FormHelperText>
             </FormControl>
             <FormControl mt={6}>
-              <FormLabel>role at this shop</FormLabel>
-              <Select size="sm" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="co-owner">co owner</option>
-                <option value="appreantice">appreantice</option>
-                <option value="replacement">replacement</option>
-              </Select>
+              <FormLabel>Duration of Stay</FormLabel>
+              <Flex flexDir="column" alignItems="center">
+                <DayPicker required mode="range" onSelect={setRange} defaultSelected={range} />
+                <FormHelperText>{footer}</FormHelperText>
+              </Flex>
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" size="sm" isLoading={isSubmitting} onClick={onSubmit}>
+            <Button colorScheme={primaryColorScheme} size="sm" isLoading={isSubmitting} onClick={onSubmit} disabled={!artist || !range}>
               send invite
             </Button>
           </ModalFooter>

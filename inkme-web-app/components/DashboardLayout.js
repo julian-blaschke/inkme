@@ -5,7 +5,7 @@ import { Breadcrumbs } from "./BreadCrumbs";
 export function DashboardLayout({ title, subtitle, menu, children }) {
   return (
     <Flex>
-      <Container px="8">
+      <Container px="8" pb="8">
         <Breadcrumbs></Breadcrumbs>
         <Stack isInline align="center" spacing={4}>
           <Heading as="h1">{title}</Heading>

@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
-import { FormControl, FormHelperText } from "@chakra-ui/form-control";
+import { FormControl } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/input";
-import { Center, Container, Divider, Heading, Kbd, Text } from "@chakra-ui/layout";
+import { Container, Divider, Heading, Kbd, Text } from "@chakra-ui/layout";
 import { SearchIcon } from "@chakra-ui/icons";
 
 import { Breadcrumbs } from "@/components/BreadCrumbs";
@@ -36,7 +36,7 @@ export default function Artists() {
       <FormControl py={8}>
         <InputGroup>
           <InputLeftElement children={<SearchIcon />}></InputLeftElement>
-          <Input placeholder="type ahead..." autoCorrect="off" focusBorderColor="pink.500" ref={searchRef} onChange={handler}></Input>
+          <Input placeholder="type ahead..." autoCorrect="off" ref={searchRef} onChange={handler}></Input>
           <InputRightElement></InputRightElement>
         </InputGroup>
       </FormControl>

@@ -58,3 +58,15 @@ export function ALL_INVITES(shop) {
   if (!shop) return;
   return db.collection("shops").doc(shop).collection("invites");
 }
+
+export function MY_INVITES(username) {
+  const db = firebase.firestore();
+  if (!username) return;
+  return db.collectionGroup("invites").where("invitee", "==", username).where("status", "==", "pending");
+}
+
+export function ALL_GUEST_SPOTS(shop) {
+  const db = firebase.firestore();
+  if (!shop) return;
+  return db.collection("shops").doc(shop).collection("guestspots");
+}

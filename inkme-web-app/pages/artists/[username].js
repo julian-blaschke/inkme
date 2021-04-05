@@ -1,15 +1,15 @@
 import { Breadcrumbs } from "@/components/BreadCrumbs";
+import { List } from "@/components/List";
+import { admin } from "@/firebase/admin";
+import { primaryColorScheme } from "@/styles/usePrimaryColor";
+import { Avatar } from "@chakra-ui/avatar";
 import { IconButton } from "@chakra-ui/button";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Container, Divider, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 import { Progress } from "@chakra-ui/progress";
-import { Avatar } from "@chakra-ui/avatar";
-import { useColorModeValue } from "@chakra-ui/color-mode";
-
-import { admin } from "@/firebase/admin";
-import { useRouter } from "next/router";
-import { List } from "@/components/List";
 import { mapShops } from "lib/utils/mappers";
+import { useRouter } from "next/router";
 
 export default function Artist({ artist }) {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function Artist({ artist }) {
 
   // If the page is not yet generated, this will be displayed initially until getStaticProps() finishes running
   if (router.isFallback) {
-    return <Progress size="xs" colorScheme="blue" isIndeterminate />;
+    return <Progress size="xs" colorScheme={primaryColorScheme} isIndeterminate />;
   }
 
   return (

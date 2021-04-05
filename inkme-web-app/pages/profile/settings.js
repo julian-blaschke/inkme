@@ -1,13 +1,17 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { UPDATE_PROFILE } from "@/firebase/mutations";
+import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
+import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
-import { Stack, Input, Textarea, Switch, Button, useToast, Progress, Skeleton, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import { Button, Input, InputGroup, InputLeftAddon, Progress, Stack, Switch, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
 export default function Settings() {
   const { profile } = useProfile();
 
-  if (!profile) return <Progress size="xs" colorScheme="pink" isIndeterminate />;
+  if (!profile) return <Progress size="xs" colorScheme={primaryColorScheme} isIndeterminate />;
 
   return (
     <DashboardLayout title="Profile Settings 🔧" subtitle="manage your account preferences.">
@@ -17,29 +21,18 @@ export default function Settings() {
 }
 
 function SettingsForm({ defaultValues }) {
-  const { profile, update } = useProfile();
+  const { user } = useAuth();
   const { register, handleSubmit, formState } = useForm({ defaultValues });
-  const toast = useToast();
+
+  const successToast = useSuccessToast();
+  const errorToast = useErrorToast();
 
   const onSubmit = async (values) => {
     try {
-      let affected = 0;
-      for (let key in values) {
-        if (profile[key] !== values[key]) affected++;
-      }
-      if (affected === 0) throw new Error("no values changed!");
-
-      await update(values);
-
-      toast({
-        title: "done.",
-        description: `successfully udpated ${affected} values.`,
-        isClosable: true,
-        position: "bottom-right",
-        status: "success",
-      });
+      await UPDATE_PROFILE(user?.uid, values);
+      successToast({ description: "your profile was successfully updated." });
     } catch ({ message }) {
-      toast({ title: "something went wrong...", description: message, status: "error", isClosable: true, position: "bottom-right" });
+      errorToast({ description: message });
     }
   };
 
@@ -69,10 +62,10 @@ function SettingsForm({ defaultValues }) {
         </FormControl>
         <FormControl>
           <FormLabel>Use Instagram Profile Picture</FormLabel>
-          <Switch name="useInstagramProfilePicture" ref={register()} size="lg" colorScheme="pink"></Switch>
+          <Switch name="useInstagramProfilePicture" ref={register()} size="lg" colorScheme={primaryColorScheme}></Switch>
           <FormHelperText>use my instagram profile picture also as my ink.me profile picture.</FormHelperText>
         </FormControl>
-        <Button type="submit" colorScheme="pink" isLoading={formState.isSubmitting}>
+        <Button type="submit" colorScheme={primaryColorScheme} isLoading={formState.isSubmitting}>
           save
         </Button>
       </Stack>

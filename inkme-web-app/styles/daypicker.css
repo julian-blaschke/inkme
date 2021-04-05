@@ -1,0 +1,9 @@
+/* react day picker styles */
+:root {
+  --rdp-cell-size: 30px;
+  --rdp-accent-color: #319795;
+  /* Switch to dark colors for dark themes */
+  --rdp-accent-color-dark: #319795;
+  --rdp-background-color-dark: #180270;
+  /* Outline border for focused elements */
+}
