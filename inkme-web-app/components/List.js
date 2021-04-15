@@ -1,14 +1,14 @@
-import { Box, Center, Stack, Text } from "@chakra-ui/layout";
+import { Box, Center, SimpleGrid, Text } from "@chakra-ui/layout";
 import { CenteredSpinner } from "./CenteredSpinner";
 import { ListItem } from "./ListItem";
 
-export function List({ title, data, isLoading, emptyMessage }) {
+export function List({ title, data, isLoading, emptyMessage, columns }) {
   return (
     <Box mt={8} id={title?.replace(/\s/g, "")}>
       <Text my={4} fontSize="sm" color="gray.500">
         {title}
       </Text>
-      <Stack mt={2} spacing={6}>
+      <SimpleGrid columns={columns} mt={2} spacing={6}>
         {isLoading ? (
           <CenteredSpinner />
         ) : data?.length > 0 ? (
@@ -20,7 +20,7 @@ export function List({ title, data, isLoading, emptyMessage }) {
             </Text>
           </Center>
         )}
-      </Stack>
+      </SimpleGrid>
     </Box>
   );
 }

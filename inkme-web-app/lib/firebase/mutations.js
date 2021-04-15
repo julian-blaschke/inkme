@@ -19,7 +19,7 @@ export async function CREATE_SHOP({ name, address, instagram, owner }) {
 export async function CREATE_INVITE({ inviter, artist, role, shop, created = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }) {
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(shop).collection("invites").doc(artist);
-  if ((await doc.get()).exists) throw new Error(`${invitee} has already been invited!`);
+  if ((await doc.get()).exists) throw new Error(`${artist} has already been invited!`);
   return doc.set({ inviter, role, created, status, artist, shop });
 }
 
@@ -28,6 +28,13 @@ export async function UPDATE_INVITE(shop, username, status) {
   const doc = db.collection("shops").doc(shop).collection("invites").doc(username);
   if (!(await doc.get()).exists) throw new Error(`invite for '${username}' at ${shop} does not exist.`);
   return doc.update({ status });
+}
+
+export async function DELETE_INVITE(shop, username) {
+  const db = firebase.firestore();
+  const doc = db.collection("shops").doc(shop).collection("invites").doc(username);
+  if (!(await doc.get()).exists) throw new Error(`invite for '${username}' at ${shop} does not exist.`);
+  return doc.delete();
 }
 
 export async function UPDATE_SHOP(name, values) {
@@ -43,5 +50,12 @@ export async function CREATE_GUESTSPOT(
 ) {
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(shop).collection("guestspots").doc();
-  return doc.set({ inviter, artist, range, created, status });
+  return doc.set({ inviter, artist, range, created, status, shop });
+}
+
+export async function DELETE_GUESTSPOT(shop, id) {
+  const db = firebase.firestore();
+  const doc = db.collection("shops").doc(shop).collection("guestspots").doc(id);
+  if (!(await doc.get()).exists) throw new Error(`guestspot doesn't exist at ${shop}`);
+  return doc.delete();
 }

@@ -1,11 +1,11 @@
 import NextLink from "next/link";
-import { useMenuBackgroundValue } from "@/hooks/useColorModeValue";
 import { IconButton } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Menu, MenuButton, MenuGroup, MenuItem, MenuList } from "@chakra-ui/menu";
+import { usePrimaryBackgroundColor } from "@/styles/usePrimaryColor";
 
 export function ShopMenu({ name }) {
-  const bg = useMenuBackgroundValue();
+  const bg = usePrimaryBackgroundColor();
   return (
     <Menu size="sm">
       {({ isOpen }) => (
@@ -15,11 +15,12 @@ export function ShopMenu({ name }) {
             <NextLink href={`/profile/shops/${name}/settings`}>
               <MenuItem>settings</MenuItem>
             </NextLink>
+            <NextLink href={`/profile/shops/${name}/artists`}>
+              <MenuItem>manage artists</MenuItem>
+            </NextLink>
             <NextLink href={`/profile/shops/${name}/guestspots`}>
               <MenuItem>manage guest spots</MenuItem>
             </NextLink>
-            <MenuItem>leave temporarily</MenuItem>
-            <MenuItem>leave shop</MenuItem>
           </MenuList>
         </>
       )}

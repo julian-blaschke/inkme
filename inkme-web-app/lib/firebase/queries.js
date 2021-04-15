@@ -17,6 +17,15 @@ export async function getInvites(shop) {
   return invites;
 }
 
+export async function ARTIST(username) {
+  if (!username) return;
+  const db = firebase.firestore();
+  const doc = db.collection("artists").doc(username);
+  const artist = await doc.get();
+  if (!artist.exists) throw new Error("user not found");
+  return { ...artist.data(), username: doc.id };
+}
+
 export function ALL_ARTISTS(username) {
   const db = firebase.firestore();
   if (!username) return;
@@ -62,11 +71,17 @@ export function ALL_INVITES(shop) {
 export function MY_INVITES(username) {
   const db = firebase.firestore();
   if (!username) return;
-  return db.collectionGroup("invites").where("invitee", "==", username).where("status", "==", "pending");
+  return db.collectionGroup("invites").where("artist", "==", username).where("status", "==", "pending");
 }
 
 export function ALL_GUEST_SPOTS(shop) {
   const db = firebase.firestore();
   if (!shop) return;
   return db.collection("shops").doc(shop).collection("guestspots");
+}
+
+export function MY_GUEST_SPOTS(username) {
+  const db = firebase.firestore();
+  if (!username) return;
+  return db.collectionGroup("guestspots").where("artist", "==", username);
 }

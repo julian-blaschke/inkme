@@ -3,6 +3,7 @@ import { getArtistByUsername } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebouncedHandler } from "@/hooks/useDebouncedHandler";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
+import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -37,7 +38,7 @@ export function InviteArtistsToShopModal({ shop }) {
   async function onSubmit() {
     try {
       setIsSubmitting(true);
-      await CREATE_INVITE({ inviter: user.uid, invitee: artist, role, shop });
+      await CREATE_INVITE({ inviter: user.uid, invitee: artist, artist, role, shop });
       successToast({ description: `we sent an invite to ${artist}. As soon as they accept your invite, they will be listed under this shop.` });
       onClose();
     } catch ({ message }) {
@@ -54,7 +55,7 @@ export function InviteArtistsToShopModal({ shop }) {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx={4}>
           <ModalHeader>Add other artists to this shop</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -90,7 +91,7 @@ export function InviteArtistsToShopModal({ shop }) {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" size="sm" isLoading={isSubmitting} onClick={onSubmit}>
+            <Button colorScheme={primaryColorScheme} size="sm" isLoading={isSubmitting} onClick={onSubmit} disabled={!artist}>
               send invite
             </Button>
           </ModalFooter>

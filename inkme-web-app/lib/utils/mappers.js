@@ -1,12 +1,14 @@
 import { MyInviteMenu } from "@/components/menu/MyInviteMenu";
+import { InviteMenu } from "@/components/menu/InviteMenu";
 import { format } from "date-fns";
+import { GuestSpotMenu } from "@/components/menu/GuestSpotMenu";
 
 export function mapArtists(artists) {
   return artists?.map((artist) => mapArtist(artist));
 }
 
-export function mapArtist({ username, bio, avatar }) {
-  return { title: username, subtitle: bio, img: avatar, url: `/artists/${username}` };
+export function mapArtist({ username, bio, img }) {
+  return { title: username, subtitle: bio, img, url: `/artists/${username}` };
 }
 
 export function mapShops(shops) {
@@ -21,9 +23,9 @@ export function mapInvites(invites) {
   return invites?.map((invite) => mapInvite(invite));
 }
 
-export function mapInvite({ inviter, artist, role, date = new Date(), status }) {
+export function mapInvite({ shop, artist, role, date = new Date(), status }) {
   const statusMap = { accepted: "green", rejected: "red", pending: "orange" };
-  return { title: artist, subtitle: `as ${role}`, badge: { colorScheme: statusMap[status], content: status } };
+  return { title: artist, subtitle: `as ${role}`, badge: { colorScheme: statusMap[status], content: status }, menu: <InviteMenu shop={shop} /> };
 }
 
 export function mapMyInvites(invites) {
@@ -38,11 +40,21 @@ export function mapGuestSpots(guestspots) {
   return guestspots?.map((guestspot) => mapGuestSpot(guestspot));
 }
 
-export function mapGuestSpot({ artist, range, status }) {
+export function mapGuestSpot({ shop, artist, img, range, status, id }) {
   const statusMap = { accepted: "green", rejected: "red", pending: "orange" };
   return {
     title: artist,
-    subtitle: `from ${format(range.from.toDate(), "PPP")} to ${format(range.to.toDate(), "PPP")}`,
+    img,
+    //subtitle: `from ${format(range.from.toDate(), "MMMM do")} to ${format(range.to.toDate(), "PPP")}`,
     badge: { colorScheme: statusMap[status], content: status },
+    menu: <GuestSpotMenu id={id} shop={shop} isAccepted={status !== "pending"} />,
   };
+}
+
+export function mapPublicGuestSpots(guestspots) {
+  return guestspots?.map((guestspot) => mapPublicGuestSpot(guestspot));
+}
+
+export function mapPublicGuestSpot({ shop, artist, img, range, status, id }) {
+  return { title: shop, img, subtitle: "test" };
 }

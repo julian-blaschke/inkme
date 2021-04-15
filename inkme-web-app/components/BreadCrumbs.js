@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 
 const convertBreadcrumb = (string) => {
-  return string.replace(/-/g, " ");
+  return string.replace(/-/g, " ").replaceAll("%20", " ");
 };
 
 export function Breadcrumbs() {

@@ -1,11 +1,12 @@
-import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { usePrimaryBackgroundColor } from "@/styles/usePrimaryColor";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Flex, IconButton, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Stack, useColorModeValue } from "@chakra-ui/react";
-
+import NextLink from "next/link";
+import { useEffect, useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
-import { useAuth } from "@/hooks/useAuth";
-import { useMenuBackgroundValue } from "@/hooks/useColorModeValue";
+import Image from "next/image";
+import { AnchorIcon } from "public/icons/anchor";
 
 export default function NavBar() {
   const [isOpen, toggle] = useState(false);
@@ -15,12 +16,23 @@ export default function NavBar() {
     toggle(false);
   }, []);
 
-  const bg = useMenuBackgroundValue();
+  const bg = usePrimaryBackgroundColor();
 
   return (
-    <Flex as="nav" py={4} pt={3} px={8} as="nav" align="center" justify="space-between" wrap="wrap">
-      <NextLink href="/">
-        <Link>Home</Link>
+    <Flex
+      as="nav"
+      py={2}
+      px={8}
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      bg={bg}
+      style={{ position: "-webkit -sticky", position: "sticky", top: 0, zIndex: 10 }}
+    >
+      <NextLink href="/home">
+        <Link>
+          <AnchorIcon />
+        </Link>
       </NextLink>
       <Flex align="center">
         <IconButton display={{ base: "block", md: "none" }} onClick={() => toggle((o) => !o)} icon={<HamburgerIcon />}></IconButton>

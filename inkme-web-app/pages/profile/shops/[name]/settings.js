@@ -1,10 +1,8 @@
 import { CenteredSpinner } from "@/components/CenteredSpinner";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { List } from "@/components/List";
-import { InviteArtistsToShopModal } from "@/components/modals/InviteArtistsToShopModal";
-import { useCollection, useDocument } from "@/firebase/hooks";
+import { useDocument } from "@/firebase/hooks";
 import { UPDATE_SHOP } from "@/firebase/mutations";
-import { ALL_INVITES, SHOP } from "@/firebase/queries";
+import { SHOP } from "@/firebase/queries";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
 import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { Button } from "@chakra-ui/button";
@@ -13,7 +11,6 @@ import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
 import { Divider, Stack } from "@chakra-ui/layout";
 import { Switch } from "@chakra-ui/switch";
 import { Textarea } from "@chakra-ui/textarea";
-import { mapInvites } from "lib/utils/mappers";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -24,15 +21,10 @@ export default function ShopSettings() {
   const shopRef = useMemo(() => SHOP(name), [name]);
   const [shop] = useDocument(shopRef, "name");
 
-  const invitesRef = useMemo(() => ALL_INVITES(name), [name]);
-  const [invites, invitesLoading] = useCollection(invitesRef, "invitee");
-
   return (
     <DashboardLayout title="Settings 🔧" subtitle={`manage shop preferences for ${name}.`}>
       {shop ? <ShopSettingsForm defaultValues={shop} /> : <CenteredSpinner />}
       <Divider variant="dashed" pb="4" />
-      <List title="invites for this shop" data={mapInvites(invites)} isLoading={invitesLoading}></List>
-      {!invitesLoading && <InviteArtistsToShopModal shop={name} />}
     </DashboardLayout>
   );
 }

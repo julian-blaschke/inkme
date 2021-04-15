@@ -4,9 +4,9 @@ function mapDocument(doc, idField) {
   return { ...doc.data(), [`${idField}`]: doc.id };
 }
 
-export function useCollection(col, idField = "id") {
+export function useCollection(col, idField = "id", defaultLoading = true) {
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(defaultLoading);
 
   //listen for changes of either path or idField
   useEffect(() => {
@@ -24,9 +24,9 @@ export function useCollection(col, idField = "id") {
   return [data, isLoading];
 }
 
-export function useDocument(doc, idField = "id") {
+export function useDocument(doc, idField = "id", defaultLoading = true) {
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(defaultLoading);
 
   //listen for changes of either path or idField
   useEffect(() => {

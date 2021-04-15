@@ -4,63 +4,87 @@ import { admin } from "@/firebase/admin";
 import { primaryColorScheme } from "@/styles/usePrimaryColor";
 import { Avatar } from "@chakra-ui/avatar";
 import { IconButton } from "@chakra-ui/button";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Container, Divider, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
-import { Progress } from "@chakra-ui/progress";
-import { mapShops } from "lib/utils/mappers";
-import { useRouter } from "next/router";
+import { Container, Divider, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/layout";
+import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
+import { mapPublicGuestSpots, mapShops } from "lib/utils/mappers";
+import { useMemo } from "react";
 
-export default function Artist({ artist }) {
-  const router = useRouter();
-  const avatar = useColorModeValue("gray.100", "gray.900");
-
-  // If the page is not yet generated, this will be displayed initially until getStaticProps() finishes running
-  if (router.isFallback) {
-    return <Progress size="xs" colorScheme={primaryColorScheme} isIndeterminate />;
-  }
-
+function Header({ username, bio, img }) {
   return (
-    <Container px={8} pb={8}>
+    <Container px={8} py={8} position="sticky">
       <Flex flexDirection="row" justify="space-between" alignItems="center">
         <Flex flexDir="column">
           <Breadcrumbs></Breadcrumbs>
           <Stack direction="row" alignItems="center" spacing={4}>
-            <Heading as="h1">{artist?.username}</Heading>
+            <Heading as="h1">{username}</Heading>
             <IconButton icon={<ChevronDownIcon />} size="sm" variant="ghost"></IconButton>
           </Stack>
           <Text fontSize="sm" color="gray" noOfLines={2} pr={8}>
-            {artist?.bio}
+            {bio}
           </Text>
         </Flex>
-        <Avatar src={artist.photoURL} borderRadius="md" bg={avatar} />
+        <Avatar src={img} borderRadius="md" colorScheme={primaryColorScheme} />
       </Flex>
-      <Divider py={8} variant="dashed" />
-      <List title="shops" data={mapShops(artist.shops)}></List>
     </Container>
+  );
+}
+
+function MainContent({ shops, guestSpots }) {
+  const listsAreOfEqualLength = useMemo(() => shops?.length === guestSpots?.length, [shops, guestSpots]);
+  return (
+    <Container px={8}>
+      <SimpleGrid columns={listsAreOfEqualLength ? 2 : 1} spacing={6}>
+        <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={mapShops(shops)}></List>
+        <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={mapPublicGuestSpots(guestSpots)}></List>
+      </SimpleGrid>
+    </Container>
+  );
+}
+
+export default function Artist({ artist, shops, guestSpots }) {
+  return (
+    <>
+      <Header {...artist} />
+      <Divider py={4} variant="dashed" />
+      <MainContent {...{ shops, guestSpots }} />
+    </>
   );
 }
 
 export async function getStaticProps(context) {
   // TODO: maybe replace with queries stored in the firebase directory & make error handling robust
-  const { username } = context.params;
-  const db = admin.firestore();
+  try {
+    const { username } = context.params;
+    const db = admin.firestore();
 
-  const doc = db.collection("artists").doc(username);
-  const artist = await doc.get();
+    const artistDoc = db.collection("artists").doc(username);
+    const artistRaw = await artistDoc.get();
+    const artist = mapFirestoreDoc(artistRaw, "username");
 
-  if (!artist.exists) return { notFound: true };
+    const shopsCol = db.collection("shops").where("artists", "array-contains", username);
+    const shopsRaw = await shopsCol.get();
+    const shops = mapFirestoreCol(shopsRaw, "name");
 
-  const docs = db.collection("shops").where("artists", "array-contains", doc.id);
-  const data = await docs.get();
-  const shops = data.docs.map((d) => ({ ...d.data(), name: d.id }));
+    const guestSpotsCol = db.collectionGroup("guestspots").where("artist", "==", username);
+    const guestSpotsRaw = await guestSpotsCol.get();
+    const guestSpotsWithFirestoreDates = mapFirestoreCol(guestSpotsRaw);
+    const guestSpots = guestSpotsWithFirestoreDates.map((guestspot) => {
+      guestspot.range.from = guestspot.range.from.toDate().toString();
+      guestspot.range.to = guestspot.range.to.toDate().toString();
+      guestspot.created = guestspot.created.toDate().toString();
+      return guestspot;
+    });
 
-  return { props: { artist: { ...artist.data(), username: doc.id, shops } }, revalidate: 60 };
+    return { props: { artist, shops, guestSpots } };
+  } catch ({ message }) {
+    return { notFound: true };
+  }
 }
 
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   };
 }
