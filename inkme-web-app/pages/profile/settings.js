@@ -3,7 +3,7 @@ import { UPDATE_PROFILE } from "@/firebase/mutations";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
-import { primaryColorScheme } from "@/styles/usePrimaryColor";
+import { primaryColorScheme } from "@/styles/theme";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { Button, Input, InputGroup, InputLeftAddon, Progress, Stack, Switch, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ export default function Settings() {
   if (!profile) return <Progress size="xs" colorScheme={primaryColorScheme} isIndeterminate />;
 
   return (
-    <DashboardLayout title="Profile Settings 🔧" subtitle="manage your account preferences.">
+    <DashboardLayout title="Profile Settings" subtitle="manage your account preferences.">
       <SettingsForm defaultValues={profile} />
     </DashboardLayout>
   );

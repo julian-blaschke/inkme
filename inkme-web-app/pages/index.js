@@ -8,7 +8,7 @@ import { FormControl } from "@chakra-ui/form-control";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/input";
 import { Center, Divider, Flex, Grid, Kbd, Text } from "@chakra-ui/layout";
-import { mapArtists, mapShops } from "lib/utils/mappers";
+import { mapArtists, mapPublicShops, mapShops } from "lib/utils/mappers";
 import { useMemo, useRef, useState } from "react";
 
 export default function Artists() {
@@ -32,13 +32,17 @@ export default function Artists() {
 
   return (
     <Grid templateColumns="50vw auto" height="max-content">
-      <Center height="full" mt={12}>
+      <Center height="full" mt={8}>
         <Flex width="md">
-          <DashboardLayout title="Find Artists & Shops">
-            <Text color="gray" fontSize="sm">
-              Just press <Kbd>/</Kbd> to focus the searchfield & type away...
-            </Text>
-            <FormControl py={8}>
+          <DashboardLayout
+            title="Find Artists & Shops"
+            subtitle={
+              <Text>
+                Just press <Kbd>/</Kbd> to focus the searchfield & type away...
+              </Text>
+            }
+          >
+            <FormControl py={4}>
               <InputGroup>
                 <InputLeftElement children={<SearchIcon />}></InputLeftElement>
                 <Input
@@ -58,7 +62,7 @@ export default function Artists() {
               <List
                 data={[
                   ...(mapArtists(artists)?.map((a) => ({ ...a, subtitle: "Artist" })) || []),
-                  ...(mapShops(shops)?.map((s) => ({ ...s, subtitle: "Shop" })) || []),
+                  ...(mapPublicShops(shops)?.map((s) => ({ ...s, subtitle: "Shop" })) || []),
                 ]}
                 isLoading={artistsLoading || shopsLoading || isLoading}
                 emptyMessage="no results found 📭."
@@ -67,8 +71,6 @@ export default function Artists() {
           </DashboardLayout>
         </Flex>
       </Center>
-      {/* background image */}
-      <div></div>
     </Grid>
   );
 }

@@ -13,17 +13,14 @@ export default function Artists() {
   const { user } = useAuth();
 
   const shopRef = useMemo(() => SHOP(name), [name]);
-  const [shop] = useDocument(shopRef, "name");
-
-  const artistsRef = useMemo(() => SHOP_ARTISTS(shop?.artists), [shop?.artists]);
-  const [artists, artistsLoading] = useCollection(artistsRef, "username");
+  const [shop, shopLoading] = useDocument(shopRef, "name");
 
   const invitesRef = useMemo(() => ALL_INVITES(name), [name]);
   const [invites, invitesLoading] = useCollection(invitesRef, "invitee");
 
   return (
-    <DashboardLayout title="Artists 🧑‍🎨" subtitle="manage artists that are working here">
-      <List title="coworkers here" data={mapArtists(artists?.filter((a) => a.username !== user.uid))} isLoading={artistsLoading}></List>
+    <DashboardLayout title="Artists" subtitle="manage artists that are working here">
+      <List title="coworkers here" data={mapArtists(shop?._artists?.filter((a) => a.artist !== user.uid))} isLoading={shopLoading}></List>
       <List title="invites for this shop" data={mapInvites(invites)} isLoading={invitesLoading}></List>
       <InviteArtistsToShopModal shop={name} />
     </DashboardLayout>

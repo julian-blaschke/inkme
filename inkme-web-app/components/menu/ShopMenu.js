@@ -1,17 +1,15 @@
 import NextLink from "next/link";
 import { IconButton } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Menu, MenuButton, MenuGroup, MenuItem, MenuList } from "@chakra-ui/menu";
-import { usePrimaryBackgroundColor } from "@/styles/usePrimaryColor";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 
 export function ShopMenu({ name }) {
-  const bg = usePrimaryBackgroundColor();
   return (
     <Menu size="sm">
       {({ isOpen }) => (
         <>
           <MenuButton isActive={isOpen} as={IconButton} icon={<ChevronDownIcon />} size="sm" />
-          <MenuList bg={bg} fontSize="sm">
+          <MenuList fontSize="sm">
             <NextLink href={`/profile/shops/${name}/settings`}>
               <MenuItem>settings</MenuItem>
             </NextLink>

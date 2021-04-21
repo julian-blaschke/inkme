@@ -4,7 +4,7 @@ import { useDocument } from "@/firebase/hooks";
 import { UPDATE_SHOP } from "@/firebase/mutations";
 import { SHOP } from "@/firebase/queries";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
-import { primaryColorScheme } from "@/styles/usePrimaryColor";
+import { primaryColorScheme } from "@/styles/theme";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
@@ -22,7 +22,7 @@ export default function ShopSettings() {
   const [shop] = useDocument(shopRef, "name");
 
   return (
-    <DashboardLayout title="Settings 🔧" subtitle={`manage shop preferences for ${name}.`}>
+    <DashboardLayout title="Settings" subtitle={`manage shop preferences for ${name}.`}>
       {shop ? <ShopSettingsForm defaultValues={shop} /> : <CenteredSpinner />}
       <Divider variant="dashed" pb="4" />
     </DashboardLayout>

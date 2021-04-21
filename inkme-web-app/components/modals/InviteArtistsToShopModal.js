@@ -3,7 +3,7 @@ import { getArtistByUsername } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebouncedHandler } from "@/hooks/useDebouncedHandler";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
-import { primaryColorScheme } from "@/styles/usePrimaryColor";
+import { primaryColorScheme } from "@/styles/theme";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -30,7 +30,7 @@ export function InviteArtistsToShopModal({ shop }) {
 
   async function onChange(username) {
     const artist = await getArtistByUsername(username);
-    setArtist(artist ? artist.username : undefined);
+    setArtist(artist ? artist : undefined);
     setIsLoading(false);
   }
   const handler = useDebouncedHandler(onChange);
@@ -38,8 +38,10 @@ export function InviteArtistsToShopModal({ shop }) {
   async function onSubmit() {
     try {
       setIsSubmitting(true);
-      await CREATE_INVITE({ inviter: user.uid, invitee: artist, artist, role, shop });
-      successToast({ description: `we sent an invite to ${artist}. As soon as they accept your invite, they will be listed under this shop.` });
+      await CREATE_INVITE({ inviter: user.uid, img: artist.img, invitee: artist.username, artist: artist.username, role, shop });
+      successToast({
+        description: `we sent an invite to ${artist.username}. As soon as they accept your invite, they will be listed under this shop.`,
+      });
       onClose();
     } catch ({ message }) {
       errorToast({ description: message });

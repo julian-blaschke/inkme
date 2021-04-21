@@ -19,12 +19,12 @@ export default function Shops() {
   const [invites, invitesLoading] = useCollection(invitesRef, "username");
 
   return (
-    <DashboardLayout title="Shops 🛋" subtitle="where we come together.">
+    <DashboardLayout title="Shops" subtitle="where we come together.">
       <List title="my shops" data={mapShops(shops)} isLoading={shopsLoading}></List>
-      <Center py={4}>
+      <Center pt={12}>
         <CreateShopModal />
       </Center>
-      <Divider py={8} variant="dashed" />
+      <Divider py={4} variant="dashed" size="md" />
       <List title="my guestspots"></List>
       <List title="my invites" data={mapMyInvites(invites)} isLoading={invitesLoading} Menu={MyInviteMenu}></List>
     </DashboardLayout>

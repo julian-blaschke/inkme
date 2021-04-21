@@ -7,20 +7,28 @@ export async function UPDATE_PROFILE(username, values) {
   return doc.update(values);
 }
 
-export async function CREATE_SHOP({ name, address, instagram, owner }) {
+export async function CREATE_SHOP({ name, address, instagram, owner, ownerImg }) {
   //TODO: validate args
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(name);
   if ((await doc.get()).exists) throw new Error(`shop with name "${name}" already exists.`);
 
-  return doc.set({ address, instagram, artists: [owner], owner });
+  return doc.set({ address, instagram, artists: [owner], owner, ownerImg });
 }
 
-export async function CREATE_INVITE({ inviter, artist, role, shop, created = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }) {
+export async function CREATE_INVITE({
+  inviter,
+  artist,
+  img,
+  role,
+  shop,
+  created = firebase.firestore.FieldValue.serverTimestamp(),
+  status = "pending",
+}) {
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(shop).collection("invites").doc(artist);
   if ((await doc.get()).exists) throw new Error(`${artist} has already been invited!`);
-  return doc.set({ inviter, role, created, status, artist, shop });
+  return doc.set({ inviter, role, created, status, artist, img, shop });
 }
 
 export async function UPDATE_INVITE(shop, username, status) {
@@ -46,11 +54,11 @@ export async function UPDATE_SHOP(name, values) {
 
 export async function CREATE_GUESTSPOT(
   shop,
-  { inviter, artist, range, created = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }
+  { inviter, artist, range, img, artistImg, created = firebase.firestore.FieldValue.serverTimestamp(), status = "pending" }
 ) {
   const db = firebase.firestore();
   const doc = db.collection("shops").doc(shop).collection("guestspots").doc();
-  return doc.set({ inviter, artist, range, created, status, shop });
+  return doc.set({ inviter, artist, range, artistImg, created, status, shop, img });
 }
 
 export async function DELETE_GUESTSPOT(shop, id) {

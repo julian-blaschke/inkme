@@ -11,7 +11,7 @@ export function DashboardLayout({ title, subtitle, menu, children }) {
         <Heading as="h1">{title}</Heading>
         {menu}
       </Stack>
-      <Text fontSize="sm" color="gray" noOfLines={2} pr={8}>
+      <Text fontSize="sm" color="gray" noOfLines={2} pr={8} mb={12}>
         {subtitle}
       </Text>
       {children}

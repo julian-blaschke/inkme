@@ -1,12 +1,11 @@
 import { useAuth } from "@/hooks/useAuth";
-import { usePrimaryBackgroundColor } from "@/styles/usePrimaryColor";
+import { useBackGroundColorValue } from "@/styles/theme";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Flex, IconButton, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Stack } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { AnchorIcon } from "public/icons/anchor";
 import { useEffect, useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
-import Image from "next/image";
-import { AnchorIcon } from "public/icons/anchor";
 
 export default function NavBar() {
   const [isOpen, toggle] = useState(false);
@@ -16,7 +15,7 @@ export default function NavBar() {
     toggle(false);
   }, []);
 
-  const bg = usePrimaryBackgroundColor();
+  const bg = useBackGroundColorValue();
 
   return (
     <Flex

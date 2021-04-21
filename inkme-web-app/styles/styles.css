@@ -1,3 +1,11 @@
 .firebase-emulator-warning {
   display: none;
 }
+
+@font-face {
+  font-family: "sailor-font";
+  src: url("/fonts/TattooInk-D0gD.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}

@@ -1,9 +1,10 @@
+import { useDocument } from "@/firebase/hooks";
 import { CREATE_GUESTSPOT } from "@/firebase/mutations";
-import { getArtistByUsername } from "@/firebase/queries";
+import { getArtistByUsername, SHOP } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebouncedHandler } from "@/hooks/useDebouncedHandler";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
-import { primaryColorScheme } from "@/styles/usePrimaryColor";
+import { primaryColorScheme } from "@/styles/theme";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -13,7 +14,7 @@ import { Center, Flex } from "@chakra-ui/layout";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 import { Spinner } from "@chakra-ui/spinner";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
@@ -23,6 +24,10 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
 
   const successToast = useSuccessToast();
   const errorToast = useErrorToast();
+
+  const shopRef = useMemo(() => SHOP(shop), [shop]);
+  const [shopData] = useDocument(shopRef, "name");
+  const img = useMemo(() => shopData?._artists?.map((a) => a.img), [shopData]);
 
   const [value, setValue] = useState("");
   const [artist, setArtist] = useState();
@@ -37,7 +42,7 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
   async function onChange(username) {
     const artist = await getArtistByUsername(username);
     //TODO: make a tooltip to suggest looking them up on inkme too see if they even have an inkme account
-    setArtist(artist ? artist.username : undefined);
+    setArtist(artist);
     setIsLoading(false);
   }
   const handler = useDebouncedHandler(onChange);
@@ -45,7 +50,8 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
   async function onSubmit() {
     try {
       setIsSubmitting(true);
-      await CREATE_GUESTSPOT(shop, { inviter: user?.uid, artist, range });
+      console.log(img);
+      await CREATE_GUESTSPOT(shop, { inviter: user?.uid, artist: artist.username, artistImg: artist.img, range, img: shopData.img || img });
       successToast({ description: `we sent an invite to ${artist}.` });
       onClose();
     } catch ({ message }) {

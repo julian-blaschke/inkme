@@ -7,16 +7,25 @@ const admin = require("firebase-admin");
  */
 const onInviteUpdate = functions.firestore
   .document("shops/{shop}/invites/{username}")
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     const invite = change.after.data();
     const db = admin.apps[0].firestore();
-    const { shop, username } = context.params;
 
     // if the status changed to `accepted` we add this artist to the shop
     if (invite.status === "accepted") {
+      const { shop, username } = context.params;
       const doc = db.collection("shops").doc(shop);
+      const { artist, img, role, inviter, created } = invite;
       return doc.update({
         artists: admin.firestore.FieldValue.arrayUnion(username),
+        _artists: admin.firestore.FieldValue.arrayUnion({
+          artist,
+          img,
+          role,
+          shop,
+          inviter,
+          joined: created,
+        }),
       });
     }
     return null;

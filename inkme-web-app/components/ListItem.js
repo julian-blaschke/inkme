@@ -1,12 +1,11 @@
+import { useHoverColorValue } from "@/styles/theme";
 import { Avatar, AvatarGroup } from "@chakra-ui/avatar";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Badge, Flex, LinkBox, LinkOverlay, Stack, Text } from "@chakra-ui/layout";
-import { Skeleton } from "@chakra-ui/skeleton";
 import Link from "next/link";
 import { useMemo } from "react";
 
 export function ListItem({ title, subtitle, img, url, badge, menu }) {
-  const hover = useColorModeValue("gray.200", "gray.800");
+  const hover = useHoverColorValue();
   //TODO: make border color of listitems unique to their privacy status (owned, private, public...)
   //TODO: write FAQ on color codes for listitems & what they mean
   const isLink = useMemo(() => !!url, [url]);
@@ -16,9 +15,9 @@ export function ListItem({ title, subtitle, img, url, badge, menu }) {
       <Stack direction="row" justify="space-between" alignItems="center" p={2} spacing={4} borderRadius="md" _hover={{ bg: hover }} role="group">
         <Stack direction="row" alignItems="center" spacing={4}>
           {Array.isArray(img) ? (
-            <AvatarGroup>
-              {img.map((i) => (
-                <Avatar borderRadius="md" src={i}></Avatar>
+            <AvatarGroup spacing={-6} border="none" bg="transparent">
+              {img.slice(0, 3).map((src, index) => (
+                <Avatar key={index} borderRadius="md" bg="transparent" src={src}></Avatar>
               ))}
             </AvatarGroup>
           ) : (
@@ -32,15 +31,23 @@ export function ListItem({ title, subtitle, img, url, badge, menu }) {
                 </LinkOverlay>
               </Link>
             ) : (
-              <Text fontSize="base">{title}</Text>
+              <Text fontSize="base" isTruncated>
+                {title}
+              </Text>
             )}
-            <Text fontSize="sm" color="gray.500" noOfLines={1}>
+            <Text fontSize="sm" color="brand.500" noOfLines={1}>
               {subtitle}
             </Text>
           </Flex>
         </Stack>
         <Flex align="center">
-          <Flex mr={menu && 4}>{badge && <Badge colorScheme={badge.colorScheme}>{badge.content}</Badge>}</Flex>
+          <Flex mr={menu && 4}>
+            {badge && (
+              <Badge fontSize="xx-small" colorScheme={badge.colorScheme}>
+                {badge.content}
+              </Badge>
+            )}
+          </Flex>
           {menu}
         </Flex>
       </Stack>

@@ -33,7 +33,7 @@ export function useDocument(doc, idField = "id", defaultLoading = true) {
     if (doc) {
       console.log("refetch");
       setIsLoading(true);
-      const unsubscribe = doc.onSnapshot((snapshot) => {
+      const unsubscribe = doc?.onSnapshot((snapshot) => {
         setData(mapDocument(snapshot, idField));
         setIsLoading(false);
       });

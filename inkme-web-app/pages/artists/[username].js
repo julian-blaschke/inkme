@@ -1,52 +1,30 @@
-import { Breadcrumbs } from "@/components/BreadCrumbs";
-import { List } from "@/components/List";
+import { List, TwoListLayout } from "@/components/List";
+import { Header } from "@/components/PublicProfileHeader";
 import { admin } from "@/firebase/admin";
-import { primaryColorScheme } from "@/styles/usePrimaryColor";
-import { Avatar } from "@chakra-ui/avatar";
-import { IconButton } from "@chakra-ui/button";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Container, Divider, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/layout";
+import { Container, Divider } from "@chakra-ui/layout";
 import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
-import { mapPublicGuestSpots, mapShops } from "lib/utils/mappers";
+import { mapPublicGuestSpotArtist, mapPublicGuestSpotsArtist, mapPublicGuestSpotsShop, mapShopsArtist } from "lib/utils/mappers";
 import { useMemo } from "react";
-
-function Header({ username, bio, img }) {
-  return (
-    <Container px={8} py={8} position="sticky">
-      <Flex flexDirection="row" justify="space-between" alignItems="center">
-        <Flex flexDir="column">
-          <Breadcrumbs></Breadcrumbs>
-          <Stack direction="row" alignItems="center" spacing={4}>
-            <Heading as="h1">{username}</Heading>
-            <IconButton icon={<ChevronDownIcon />} size="sm" variant="ghost"></IconButton>
-          </Stack>
-          <Text fontSize="sm" color="gray" noOfLines={2} pr={8}>
-            {bio}
-          </Text>
-        </Flex>
-        <Avatar src={img} borderRadius="md" colorScheme={primaryColorScheme} />
-      </Flex>
-    </Container>
-  );
-}
 
 function MainContent({ shops, guestSpots }) {
   const listsAreOfEqualLength = useMemo(() => shops?.length === guestSpots?.length, [shops, guestSpots]);
+
   return (
     <Container px={8}>
-      <SimpleGrid columns={listsAreOfEqualLength ? 2 : 1} spacing={6}>
-        <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={mapShops(shops)}></List>
-        <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={mapPublicGuestSpots(guestSpots)}></List>
-      </SimpleGrid>
+      <TwoListLayout listsAreOfEqualLength={listsAreOfEqualLength}>
+        {shops?.length > 0 && <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={shops}></List>}
+        {guestSpots?.length > 0 && <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={guestSpots}></List>}
+      </TwoListLayout>
     </Container>
   );
 }
 
 export default function Artist({ artist, shops, guestSpots }) {
+  const { username, bio, img } = artist;
   return (
     <>
-      <Header {...artist} />
-      <Divider py={4} variant="dashed" />
+      <Header title={username} subtitle={bio} avatar={img} />
+      <Divider py={4} />
       <MainContent {...{ shops, guestSpots }} />
     </>
   );
@@ -64,20 +42,17 @@ export async function getStaticProps(context) {
 
     const shopsCol = db.collection("shops").where("artists", "array-contains", username);
     const shopsRaw = await shopsCol.get();
-    const shops = mapFirestoreCol(shopsRaw, "name");
+    const shopsData = mapFirestoreCol(shopsRaw, "name");
+    const shops = mapShopsArtist(shopsData, artist.username);
 
     const guestSpotsCol = db.collectionGroup("guestspots").where("artist", "==", username);
     const guestSpotsRaw = await guestSpotsCol.get();
     const guestSpotsWithFirestoreDates = mapFirestoreCol(guestSpotsRaw);
-    const guestSpots = guestSpotsWithFirestoreDates.map((guestspot) => {
-      guestspot.range.from = guestspot.range.from.toDate().toString();
-      guestspot.range.to = guestspot.range.to.toDate().toString();
-      guestspot.created = guestspot.created.toDate().toString();
-      return guestspot;
-    });
+    const guestSpots = mapPublicGuestSpotsArtist(guestSpotsWithFirestoreDates);
 
     return { props: { artist, shops, guestSpots } };
   } catch ({ message }) {
+    console.log(message);
     return { notFound: true };
   }
 }
