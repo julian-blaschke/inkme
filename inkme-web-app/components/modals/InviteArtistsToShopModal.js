@@ -57,7 +57,7 @@ export function InviteArtistsToShopModal({ shop }) {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent mx={4}>
+        <ModalContent>
           <ModalHeader>Add other artists to this shop</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

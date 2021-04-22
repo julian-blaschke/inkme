@@ -1,17 +1,18 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { List } from "@/components/List";
+import { List, TwoListLayout } from "@/components/List";
 import { useCollection } from "@/firebase/hooks";
 import { ALL_ARTISTS, ALL_SHOPS } from "@/firebase/queries";
 import { useDebouncedHandler } from "@/hooks/useDebouncedHandler";
 import { useKeyPressFocusInput } from "@/hooks/useKeyPress";
 import { FormControl } from "@chakra-ui/form-control";
 import { SearchIcon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/image";
 import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/input";
-import { Center, Divider, Flex, Grid, Kbd, Text } from "@chakra-ui/layout";
+import { Center, Container, Divider, Flex, Grid, Heading, Kbd, SimpleGrid, Text } from "@chakra-ui/layout";
 import { mapArtists, mapPublicShops, mapShops } from "lib/utils/mappers";
 import { useMemo, useRef, useState } from "react";
 
-export default function Artists() {
+function SearchSection() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const handler = useDebouncedHandler((e) => {
@@ -31,46 +32,71 @@ export default function Artists() {
   useKeyPressFocusInput(searchRef);
 
   return (
-    <Grid templateColumns="50vw auto" height="max-content">
-      <Center height="full" mt={8}>
-        <Flex width="md">
-          <DashboardLayout
-            title="Find Artists & Shops"
-            subtitle={
-              <Text>
-                Just press <Kbd>/</Kbd> to focus the searchfield & type away...
-              </Text>
-            }
-          >
-            <FormControl py={4}>
-              <InputGroup>
-                <InputLeftElement children={<SearchIcon />}></InputLeftElement>
-                <Input
-                  placeholder="type ahead..."
-                  autoCorrect="off"
-                  ref={searchRef}
-                  onChange={(e) => {
-                    setIsLoading(true);
-                    handler(e);
-                  }}
-                ></Input>
-                <InputRightElement></InputRightElement>
-              </InputGroup>
-            </FormControl>
-            <Divider variant="dashed" />
-            {
-              <List
-                data={[
-                  ...(mapArtists(artists)?.map((a) => ({ ...a, subtitle: "Artist" })) || []),
-                  ...(mapPublicShops(shops)?.map((s) => ({ ...s, subtitle: "Shop" })) || []),
-                ]}
-                isLoading={artistsLoading || shopsLoading || isLoading}
-                emptyMessage="no results found 📭."
-              ></List>
-            }
-          </DashboardLayout>
-        </Flex>
-      </Center>
-    </Grid>
+    <Container maxW={{ md: "md" }} p={8}>
+      <Heading as="h2" fontSize="5xl" fontWeight="black">
+        Search
+      </Heading>
+      <Text>
+        Search for Artists & Shops. Just press <Kbd>/</Kbd> to focus the searchfield & type away...
+      </Text>
+      <FormControl mt={12}>
+        <InputGroup>
+          <InputLeftElement children={<SearchIcon />}></InputLeftElement>
+          <Input
+            name="search"
+            placeholder="type ahead..."
+            autoCorrect="off"
+            ref={searchRef}
+            onChange={(e) => {
+              setIsLoading(true);
+              handler(e);
+            }}
+          ></Input>
+          <InputRightElement></InputRightElement>
+        </InputGroup>
+      </FormControl>
+      <List
+        title="results"
+        data={[
+          ...(mapArtists(artists)?.map((a) => ({ ...a, subtitle: "Artist" })) || []),
+          ...(mapPublicShops(shops)?.map((s) => ({ ...s, subtitle: "Shop" })) || []),
+        ]}
+        isLoading={artistsLoading || shopsLoading || isLoading}
+        emptyMessage="no results found 📭."
+      ></List>
+    </Container>
+  );
+}
+
+function DiscoverSection() {
+  return (
+    <Container p={8} maxW={{ md: "container.md" }}>
+      <Heading as="h2" fontSize="5xl" fontWeight="black">
+        Discover
+      </Heading>
+      <Text maxW="md">Discover Artists & Shops near your location. Check out guestspots that are comming to your city.</Text>
+      <TwoListLayout listsAreOfEqualLength>
+        <List title="artists & shops near you"></List>
+        <List title="guestspots near you"></List>
+      </TwoListLayout>
+      <Divider py={8} />
+      <TwoListLayout listsAreOfEqualLength>
+        <List title="suggested spots"></List>
+        <List title="sponsored spots"></List>
+      </TwoListLayout>
+    </Container>
+  );
+}
+
+export default function Artists() {
+  return (
+    <>
+      {/*<Image src="/scribbles/2linescurved.png" position="absolute" mr="auto" right={0} zIndex="-1" opacity="0.1" height="calc(100vh - 56px)" />*/}
+      <SimpleGrid columns={{ base: 1, md: 2 }} gridTemplateColumns={{ md: "1fr 1fr", xl: "1fr 2fr" }} gap={{ base: 12, md: 0 }}>
+        <SearchSection />
+        <Divider display={{ base: "inline-block", md: "none" }} />
+        <DiscoverSection />
+      </SimpleGrid>
+    </>
   );
 }

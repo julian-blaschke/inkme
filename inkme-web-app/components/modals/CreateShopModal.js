@@ -4,13 +4,12 @@ import { ARTIST } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useErrorToast, useSuccessToast } from "@/hooks/useToast";
 import { primaryColorScheme } from "@/styles/theme";
-import { Alert, AlertIcon } from "@chakra-ui/alert";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { SmallAddIcon } from "@chakra-ui/icons";
-import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
-import { Center, Stack } from "@chakra-ui/layout";
+import { Input } from "@chakra-ui/input";
+import { Center, Kbd, Stack } from "@chakra-ui/layout";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -33,6 +32,7 @@ export function CreateShopModal() {
       await CREATE_SHOP({ ...values, owner: user?.uid, ownerImg: owner?.img });
       successToast({ description: `we added ${values.name} to your shops. you can also send out invites to artists, that are working there.` });
       onClose();
+      //TODO: redirect to settings page & focus instagram field
     } catch ({ message }) {
       errorToast({ description: message });
     }
@@ -49,35 +49,15 @@ export function CreateShopModal() {
           <ModalHeader>Create a new shop</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalBody>
-              <Alert status="info" colorScheme={primaryColorScheme}>
-                <AlertIcon />
-                keep in mind that only owners should create shops!
-                {
-                  //TODO: link to FAQ `who should create shops`
-                }
-              </Alert>
-              <Stack py={4} spacing={8} as="form" onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isRequired>
-                  <FormLabel>name</FormLabel>
-                  <Input name="name" ref={register()} size="sm" placeholder="Needle Barn"></Input>
-                </FormControl>
-                <FormControl isRequired>
-                  <FormLabel>address</FormLabel>
-                  <Input name="address" ref={register()} size="sm" placeholder="Needlestreet 31, Vienna"></Input>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>instagram link</FormLabel>
-                  <InputGroup size="sm">
-                    <InputLeftAddon bg="transparent">https://www.instagram.com/</InputLeftAddon>
-                    <Input name="instagram" ref={register()} placeholder="needle-barn"></Input>
-                  </InputGroup>
-                  <FormHelperText>
-                    we will pull all relevant data, like profile picture & posts, from instagram & reuse it here. Of course we will keep everything
-                    updated, always.
-                  </FormHelperText>
-                </FormControl>
-              </Stack>
+            <ModalBody py={4}>
+              <FormControl isRequired>
+                <FormLabel>name</FormLabel>
+                <Input name="name" ref={register()} size="sm" placeholder="Needle Barn"></Input>
+                <FormHelperText>
+                  Your name has to be unique & you mustn't use any <Kbd>spacebar</Kbd> in it.
+                </FormHelperText>
+                <FormHelperText>please note that you will be marked as owner of this shop.</FormHelperText>
+              </FormControl>
             </ModalBody>
             <ModalFooter>
               <Button type="submit" size="sm" colorScheme={primaryColorScheme} isLoading={formState.isSubmitting}>

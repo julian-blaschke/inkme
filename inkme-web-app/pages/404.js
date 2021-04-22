@@ -2,19 +2,19 @@ import { ImageLayout } from "@/components/layout/ImageLayout";
 import { Center, Flex, Link, Text } from "@chakra-ui/layout";
 import NextLink from "next/link";
 
-function Error({ statusCode }) {
+export default function notFound() {
   return (
-    <ImageLayout img="/500.png">
+    <ImageLayout img="/404.png">
       <Flex flexDir="column">
         <Text fontSize="9xl" fontWeight="black">
-          {statusCode}
+          404
         </Text>
         <Text fontSize="2xl" fontWeight="semibold">
-          Oops! something crashed.
+          Oops! You ran out of ink.
         </Text>
         <Center flexDir="column" alignItems="start" spacing={4} maxW="sm">
           <Text color="bg.500">
-            We're so sorry this happend. Lets get you{" "}
+            The page you're looking for does not exist. Lets get you{" "}
             <NextLink href="/home">
               <Link>back home.</Link>
             </NextLink>
@@ -24,10 +24,3 @@ function Error({ statusCode }) {
     </ImageLayout>
   );
 }
-
-Error.getInitialProps = ({ res, err }) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return { statusCode };
-};
-
-export default Error;

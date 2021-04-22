@@ -1,6 +1,6 @@
 import { MyInviteMenu } from "@/components/menu/MyInviteMenu";
 import { InviteMenu } from "@/components/menu/InviteMenu";
-import { differenceInCalendarDays, differenceInDays, format } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
 import { GuestSpotMenu } from "@/components/menu/GuestSpotMenu";
 
 export function mapArtists(artists) {
@@ -23,9 +23,9 @@ export function mapShops(shops) {
   return shops?.map((shop) => mapShop(shop));
 }
 
-export function mapShop({ name, img, address, avatar, _artists }) {
+export function mapShop({ name, img, address, _artists }) {
   const artistsImgs = _artists?.map((artist) => artist.img);
-  return { title: name, subtitle: address, img: avatar, url: `/profile/shops/${name}`, img: img || artistsImgs };
+  return { title: name, subtitle: address, url: `/profile/shops/${name}`, img: img || artistsImgs };
 }
 
 export function mapPublicShops(shops) {
@@ -53,7 +53,7 @@ export function mapInvites(invites) {
 
 export function mapInvite({ shop, artist, img, role, date = new Date(), status }) {
   const statusMap = { accepted: "green", rejected: "red", pending: "orange" };
-  return { title: artist, subtitle: `as ${role}`, img, badge: { colorScheme: statusMap[status], content: status }, menu: <InviteMenu shop={shop} /> };
+  return { title: artist, subtitle: role, img, badge: { colorScheme: statusMap[status], content: status }, menu: <InviteMenu shop={shop} /> };
 }
 
 export function mapMyInvites(invites) {
@@ -68,12 +68,12 @@ export function mapGuestSpots(guestspots) {
   return guestspots?.map((guestspot) => mapGuestSpot(guestspot));
 }
 
-export function mapGuestSpot({ shop, artist, img, range, status, id }) {
+export function mapGuestSpot({ shop, artist, artistImg, img, range, status, id }) {
   const statusMap = { accepted: "green", rejected: "red", pending: "orange" };
   return {
     title: artist,
-    img,
-    subtitle: `from ${format(range.from.toDate(), "MMMM do")} to ${format(range.to.toDate(), "PPP")}`,
+    img: artistImg,
+    subtitle: `${format(range.from.toDate(), "d")} to ${format(range.to.toDate(), "d MMM")}`,
     badge: { colorScheme: statusMap[status], content: status },
     menu: <GuestSpotMenu id={id} shop={shop} isAccepted={status !== "pending"} />,
   };

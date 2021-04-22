@@ -15,7 +15,7 @@ export default function GuestSpots() {
 
   return (
     <DashboardLayout title="Guest Spots" subtitle="manage guest spots at your shop">
-      <List title="invites" columns={2} data={mapGuestSpots(guestspots?.map((g) => ({ ...g, shop: name })))} isLoading={isLoading}></List>
+      <List title="invites" data={mapGuestSpots(guestspots?.map((g) => ({ ...g, shop: name })))} isLoading={isLoading}></List>
       <InviteArtistsToGuestSpotModal shop={name} />
     </DashboardLayout>
   );

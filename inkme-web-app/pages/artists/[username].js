@@ -1,6 +1,7 @@
 import { List, TwoListLayout } from "@/components/List";
 import { Header } from "@/components/PublicProfileHeader";
 import { admin } from "@/firebase/admin";
+import { Image } from "@chakra-ui/image";
 import { Container, Divider } from "@chakra-ui/layout";
 import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
 import { mapPublicGuestSpotArtist, mapPublicGuestSpotsArtist, mapPublicGuestSpotsShop, mapShopsArtist } from "lib/utils/mappers";
@@ -10,12 +11,14 @@ function MainContent({ shops, guestSpots }) {
   const listsAreOfEqualLength = useMemo(() => shops?.length === guestSpots?.length, [shops, guestSpots]);
 
   return (
-    <Container px={8}>
-      <TwoListLayout listsAreOfEqualLength={listsAreOfEqualLength}>
-        {shops?.length > 0 && <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={shops}></List>}
-        {guestSpots?.length > 0 && <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={guestSpots}></List>}
-      </TwoListLayout>
-    </Container>
+    <>
+      <Container px={8} pb={8}>
+        <TwoListLayout listsAreOfEqualLength={listsAreOfEqualLength}>
+          {shops?.length > 0 && <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={shops}></List>}
+          {guestSpots?.length > 0 && <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={guestSpots}></List>}
+        </TwoListLayout>
+      </Container>
+    </>
   );
 }
 
@@ -23,7 +26,7 @@ export default function Artist({ artist, shops, guestSpots }) {
   const { username, bio, img } = artist;
   return (
     <>
-      <Header title={username} subtitle={bio} avatar={img} />
+      <Header title={username} subtitle={bio} img={img} />
       <Divider py={4} />
       <MainContent {...{ shops, guestSpots }} />
     </>
@@ -38,6 +41,7 @@ export async function getStaticProps(context) {
 
     const artistDoc = db.collection("artists").doc(username);
     const artistRaw = await artistDoc.get();
+    if (!artistRaw.exists) return { notFound: true };
     const artist = mapFirestoreDoc(artistRaw, "username");
 
     const shopsCol = db.collection("shops").where("artists", "array-contains", username);

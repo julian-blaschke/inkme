@@ -1,12 +1,11 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { List } from "@/components/List";
-import { MyInviteMenu } from "@/components/menu/MyInviteMenu";
 import { CreateShopModal } from "@/components/modals/CreateShopModal";
 import { useCollection } from "@/firebase/hooks";
-import { MY_INVITES, MY_SHOPS } from "@/firebase/queries";
+import { MY_SHOPS } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
-import { Center, Divider } from "@chakra-ui/layout";
-import { mapMyInvites, mapShops } from "lib/utils/mappers";
+import { Divider } from "@chakra-ui/layout";
+import { mapShops } from "lib/utils/mappers";
 import { useMemo } from "react";
 
 export default function Shops() {
@@ -15,18 +14,12 @@ export default function Shops() {
   const shopsRef = useMemo(() => MY_SHOPS(user?.uid), [user]);
   const [shops, shopsLoading] = useCollection(shopsRef, "name");
 
-  const invitesRef = useMemo(() => MY_INVITES(user?.uid), [user]);
-  const [invites, invitesLoading] = useCollection(invitesRef, "username");
-
   return (
     <DashboardLayout title="Shops" subtitle="where we come together.">
-      <List title="my shops" data={mapShops(shops)} isLoading={shopsLoading}></List>
-      <Center pt={12}>
-        <CreateShopModal />
-      </Center>
+      <List title="shops" data={mapShops(shops)} isLoading={shopsLoading}></List>
+      <CreateShopModal />
       <Divider py={4} variant="dashed" size="md" />
-      <List title="my guestspots"></List>
-      <List title="my invites" data={mapMyInvites(invites)} isLoading={invitesLoading} Menu={MyInviteMenu}></List>
+      <List title="guestspots"></List>
     </DashboardLayout>
   );
 }

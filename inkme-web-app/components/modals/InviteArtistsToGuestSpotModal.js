@@ -68,7 +68,7 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent mx={4}>
+        <ModalContent>
           <ModalHeader>Invite an artist to Guest Spot</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

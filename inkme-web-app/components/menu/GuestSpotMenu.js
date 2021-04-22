@@ -5,9 +5,7 @@ import { IconButton } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 
-export function GuestSpotMenu({ id, shop, isAccepted }) {
-  const { user } = useAuth();
-
+export function GuestSpotMenu({ id, shop }) {
   const successToast = useSuccessToast();
   const errorToast = useErrorToast();
 
@@ -21,7 +19,7 @@ export function GuestSpotMenu({ id, shop, isAccepted }) {
   }
 
   return (
-    <Menu size="xs">
+    <Menu size="xs" isLazy>
       {({ isOpen }) => (
         <>
           <MenuButton isActive={isOpen} as={IconButton} icon={<ChevronDownIcon />} size="sm" />

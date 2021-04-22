@@ -9,7 +9,7 @@ import DarkModeToggle from "./DarkModeToggle";
 
 export default function NavBar() {
   const [isOpen, toggle] = useState(false);
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     toggle(false);
@@ -73,15 +73,13 @@ export default function NavBar() {
                 <NextLink href="/profile/shops">
                   <MenuItem>shops</MenuItem>
                 </NextLink>
-                <NextLink href="/profile/appointments">
-                  <MenuItem>appointments</MenuItem>
+                <NextLink href="/profile/invites">
+                  <MenuItem>invites</MenuItem>
                 </NextLink>
               </MenuGroup>
               <MenuDivider />
               <MenuGroup fontSize="xs" title="other">
-                <NextLink href="/profile/messages">
-                  <MenuItem>messages</MenuItem>
-                </NextLink>
+                <MenuItem onClick={signOut}>sign out</MenuItem>
               </MenuGroup>
             </MenuList>
           </Menu>
