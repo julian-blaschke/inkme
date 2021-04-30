@@ -62,7 +62,6 @@ function SearchSection() {
           ...(mapPublicShops(shops)?.map((s) => ({ ...s, subtitle: "Shop" })) || []),
         ]}
         isLoading={artistsLoading || shopsLoading || isLoading}
-        emptyMessage="no results found 📭."
       ></List>
     </Container>
   );
@@ -89,10 +88,11 @@ function DiscoverSection() {
 }
 
 export default function Artists() {
+  //can't use custom component for layout, as this page has fixed height settings
   return (
     <>
       {/*<Image src="/scribbles/2linescurved.png" position="absolute" mr="auto" right={0} zIndex="-1" opacity="0.1" height="calc(100vh - 56px)" />*/}
-      <SimpleGrid columns={{ base: 1, md: 2 }} gridTemplateColumns={{ md: "1fr 1fr", xl: "1fr 2fr" }} gap={{ base: 12, md: 0 }}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} gridTemplateColumns={{ md: "1fr 1fr" }} gap={{ base: 12, md: 0 }} minHeight={`calc(100vh - 56px)`}>
         <SearchSection />
         <Divider display={{ base: "inline-block", md: "none" }} />
         <DiscoverSection />

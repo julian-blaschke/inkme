@@ -7,6 +7,13 @@ export async function UPDATE_PROFILE(username, values) {
   return doc.update(values);
 }
 
+export async function UPDATE_ACCOUNT(username, values) {
+  const db = firebase.firestore();
+  const doc = db.collection("accounts").doc(username);
+  if (!(await doc.get()).exists) return doc.set(values);
+  return doc.update(values);
+}
+
 export async function CREATE_SHOP({ name, address, instagram, owner, ownerImg }) {
   //TODO: validate args
   const db = firebase.firestore();

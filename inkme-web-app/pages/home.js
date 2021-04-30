@@ -1,9 +1,10 @@
 import { ImageLayout } from "@/components/layout/ImageLayout";
 import { primaryColorScheme } from "@/styles/theme";
-import { Button, Center, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import Image from "next/image";
+import { Button, Center, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const { push } = useRouter();
   return (
     <ImageLayout img="/rubberman.png">
       <Center mt={{ base: 0, md: 12 }} flexDir="column" maxW="container.sm">
@@ -14,8 +15,10 @@ export default function Home() {
           Track where your favourite artists are currently working at & travelling to. Check out current guestSpots in your area.
         </Text>
         <Stack mt={12} isInline spacing={8}>
-          <Button colorScheme={primaryColorScheme}>check out artists</Button>
-          <Button colorScheme={primaryColorScheme} variant="outline">
+          <Button colorScheme={primaryColorScheme} onClick={() => push("/")}>
+            check out artists
+          </Button>
+          <Button colorScheme={primaryColorScheme} onClick={() => push("/sign-up")} variant="outline">
             sign up as artist
           </Button>
         </Stack>

@@ -1,10 +1,9 @@
 import { List, TwoListLayout } from "@/components/List";
 import { Header } from "@/components/PublicProfileHeader";
 import { admin } from "@/firebase/admin";
-import { Image } from "@chakra-ui/image";
 import { Container, Divider } from "@chakra-ui/layout";
 import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
-import { mapPublicGuestSpotArtist, mapPublicGuestSpotsArtist, mapPublicGuestSpotsShop, mapShopsArtist } from "lib/utils/mappers";
+import { mapPublicGuestSpotsArtist, mapShopsArtist } from "lib/utils/mappers";
 import { useMemo } from "react";
 
 function MainContent({ shops, guestSpots }) {
@@ -34,31 +33,26 @@ export default function Artist({ artist, shops, guestSpots }) {
 }
 
 export async function getStaticProps(context) {
-  // TODO: maybe replace with queries stored in the firebase directory & make error handling robust
-  try {
-    const { username } = context.params;
-    const db = admin.firestore();
+  const { username } = context.params;
+  const db = admin.firestore();
 
-    const artistDoc = db.collection("artists").doc(username);
-    const artistRaw = await artistDoc.get();
-    if (!artistRaw.exists) return { notFound: true };
-    const artist = mapFirestoreDoc(artistRaw, "username");
+  const artistDoc = db.collection("artists").doc(username);
+  const artistRaw = await artistDoc.get();
+  if (!artistRaw.exists) return { notFound: true };
 
-    const shopsCol = db.collection("shops").where("artists", "array-contains", username);
-    const shopsRaw = await shopsCol.get();
-    const shopsData = mapFirestoreCol(shopsRaw, "name");
-    const shops = mapShopsArtist(shopsData, artist.username);
+  const artist = mapFirestoreDoc(artistRaw, "username");
 
-    const guestSpotsCol = db.collectionGroup("guestspots").where("artist", "==", username);
-    const guestSpotsRaw = await guestSpotsCol.get();
-    const guestSpotsWithFirestoreDates = mapFirestoreCol(guestSpotsRaw);
-    const guestSpots = mapPublicGuestSpotsArtist(guestSpotsWithFirestoreDates);
+  const shopsCol = db.collection("shops").where("artists", "array-contains", username);
+  const shopsRaw = await shopsCol.get();
+  const shopsData = mapFirestoreCol(shopsRaw, "name");
+  const shops = mapShopsArtist(shopsData, artist.username);
 
-    return { props: { artist, shops, guestSpots } };
-  } catch ({ message }) {
-    console.log(message);
-    return { notFound: true };
-  }
+  const guestSpotsCol = db.collectionGroup("guestspots").where("artist", "==", username);
+  const guestSpotsRaw = await guestSpotsCol.get();
+  const guestSpotsWithFirestoreDates = mapFirestoreCol(guestSpotsRaw);
+  const guestSpots = mapPublicGuestSpotsArtist(guestSpotsWithFirestoreDates);
+
+  return { props: { artist, shops, guestSpots } };
 }
 
 export async function getStaticPaths() {

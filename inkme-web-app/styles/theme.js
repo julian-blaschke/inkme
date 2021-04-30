@@ -3,11 +3,15 @@ import { extendTheme, useColorModeValue } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 export function useBackGroundColorValue() {
-  return useColorModeValue("bg.100", "bg.900");
+  return useColorModeValue("white", "bg.900");
+}
+
+export function useForeGroundColorValue() {
+  return useColorModeValue("bg.900", "bg.100");
 }
 
 export function useHoverColorValue() {
-  return useColorModeValue("bg.200", "bg.800");
+  return useColorModeValue("gray.100", "bg.800");
 }
 
 export const primaryColorScheme = "brand";
@@ -19,15 +23,15 @@ const config = {
 
 const colors = {
   bg: {
-    900: "#2E2E2E",
-    800: "#474747",
-    700: "#61605F",
-    600: "#7A7978",
-    500: "#939291",
-    400: "#ACABA9",
-    300: "#C6C4C2",
-    200: "#DFDDDA",
-    100: "#F8F6F3",
+    900: "#1C1C1C",
+    800: "#383735",
+    700: "#55524E",
+    600: "#716D66",
+    500: "#8E887F",
+    400: "#AAA398",
+    300: "#C6BEB1",
+    200: "#E3D9C9",
+    100: "#FFF4E2",
   },
   brand: {
     900: "#F3B32C",
@@ -45,11 +49,11 @@ const colors = {
 const styles = {
   global: (props) => ({
     body: {
-      color: mode("bg.900", "bg.100")(props),
-      bg: mode("bg.100", "bg.900")(props),
+      color: mode("bg.900", "white")(props),
+      bg: mode("whiteAlpha", "bg.900")(props),
     },
     "::selection": {
-      bg: "brand.100",
+      bg: mode("brand.100", "bg.200")(props),
     },
   }),
 };
@@ -59,7 +63,7 @@ const components = {
     parts: ["dialog"],
     baseStyle: ({ colorMode }) => ({
       dialog: {
-        background: colorMode === "dark" ? "bg.900" : "bg.100",
+        background: colorMode === "dark" ? "bg.900" : "white",
         mx: 4,
       },
     }),
@@ -68,28 +72,22 @@ const components = {
     parts: ["list", "item"],
     baseStyle: ({ colorMode }) => ({
       list: {
-        background: colorMode === "dark" ? "bg.900" : "bg.100",
+        background: colorMode === "dark" ? "bg.900" : "white",
       },
       item: {
         _focus: {
-          background: colorMode === "dark" ? "bg.800" : "bg.200",
+          background: colorMode === "dark" ? "bg.800" : "gray.50",
         },
         _active: {
-          background: colorMode === "dark" ? "bg.700" : "bg.300",
+          background: colorMode === "dark" ? "bg.700" : "gray.100",
         },
       },
     }),
   },
-  Divider: {
-    baseStyle: ({ colorMode }) => ({
-      borderColor: colorMode === "dark" ? "bg.100" : "bg.900",
-      opacity: 1,
-    }),
-    defaultProps: { variant: "dashed" },
-  },
+  Divider: {},
   IconButton: {
     baseStyle: ({ colorMode }) => ({
-      _hover: {
+      _focus: {
         background: colorMode === "dark" ? "bg.800" : "bg.200",
       },
     }),
@@ -102,12 +100,6 @@ const components = {
       link: {
         mt: 8,
       },
-    },
-  },
-  AvatarGroup: {
-    baseStyle: {
-      max: 2,
-      borderRadius: "md",
     },
   },
 };

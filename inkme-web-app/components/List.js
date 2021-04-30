@@ -1,14 +1,14 @@
-import { Box, Center, Heading, SimpleGrid, Text } from "@chakra-ui/layout";
+import { Center, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/layout";
 import { CenteredSpinner } from "./CenteredSpinner";
 import { ListItem } from "./ListItem";
 
-export function List({ title, data, isLoading, emptyMessage, columns }) {
+export function List({ title, data, isLoading, emptyMessage, columns, gridProps }) {
   return (
-    <Box mt={8} id={title?.replace(/\s/g, "")}>
-      <Heading as="h2" fontStyle="italic" fontWeight="normal" my={4} fontSize="sm" color="bg.500">
+    <Flex mt={8} id={title?.replace(/\s/g, "")} flexDir="column">
+      <Heading as="h2" fontStyle="italic" fontWeight="black" my={4} fontSize="sm">
         {title}
       </Heading>
-      <SimpleGrid columns={{ base: 1, md: columns }} mt={2} spacing={6}>
+      <SimpleGrid mt={2} spacing={6} {...gridProps}>
         {isLoading ? (
           <CenteredSpinner />
         ) : data?.length > 0 ? (
@@ -16,12 +16,12 @@ export function List({ title, data, isLoading, emptyMessage, columns }) {
         ) : (
           <Center py={4}>
             <Text color="bg.500" fontSize="sm">
-              {emptyMessage || "list is empty 🤷."}
+              {emptyMessage || ""}
             </Text>
           </Center>
         )}
       </SimpleGrid>
-    </Box>
+    </Flex>
   );
 }
 

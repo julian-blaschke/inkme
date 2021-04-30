@@ -1,55 +1,32 @@
-import { useColorModeValue } from "@chakra-ui/color-mode";
+import { useHoverColorValue } from "@/styles/theme";
 import { Box, Flex, LinkBox, LinkOverlay, Stack, Text } from "@chakra-ui/layout";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { AnchorIcon } from "public/icons/anchor";
+import DarkModeToggle from "./DarkModeToggle";
 
-const menus = [
-  { title: "Artists", href: "/artists" },
-  { title: "Profile Settings", href: "/profile/settings" },
-  { title: "Security & Privacy", href: "/profile/security&privacy" },
-  { title: "Shops", href: "/profile/shops" },
-];
-
-export function DashboardSideBar({ showOnlyIcons }) {
-  const router = useRouter();
-  const [active, setActive] = useState("");
-  const activeColor = useColorModeValue("gray.300", "gray.700");
-  const bg = useColorModeValue("gray.200", "gray.800");
-
-  useEffect(() => {
-    if (router) {
-      setActive(router.asPath);
-    }
-  }, []);
-
+function SideBarItem({ title, href, icon }) {
   return (
-    <Flex
-      justify="center"
-      as="nav"
-      spacing={12}
-      mx={4}
-      py={4}
-      mt={4}
-      position="fixed"
-      width={showOnlyIcons ? 16 : 52}
-      borderRadius="md"
-      height="full"
-    >
-      <Stack as="ul" listStyleType="none" spacing={6} justifyContent="flex-start" alignItems="flex-start">
-        {menus.map(({ title, href, icon }) => (
-          <LinkBox as="li" bg={active === href ? activeColor : ""} borderRadius="md" px={4} py={2} width="full">
-            <Link href={href}>
-              <LinkOverlay href="#">
-                <Stack isInline spacing={4} alignItems="center">
-                  {icon}
-                  {!showOnlyIcons && <Text fontSize="sm">{title}</Text>}
-                </Stack>
-              </LinkOverlay>
-            </Link>
-          </LinkBox>
-        ))}
-      </Stack>
-    </Flex>
+    <LinkBox py={2} px={6} as={Stack} spacing={2} isInline align="center" borderRadius="lg">
+      {icon}
+      <LinkOverlay href={href} display={{ base: "none", md: "inline-block" }}>
+        {title}
+      </LinkOverlay>
+    </LinkBox>
+  );
+}
+
+function SideBarHeader() {
+  return <SideBarItem title={<Text fontWeight="black">Ink.me</Text>} icon={<AnchorIcon />} href="/dashboard" />;
+}
+
+export function DashboardSideBar() {
+  return (
+    <Box height={{ sm: "100vh" }} width={{ base: "100vw", sm: "auto" }} maxW={52} display={{ base: "none", sm: "block" }}>
+      <Box height="full" py={4} px={2} borderRightWidth={1} bottom={{ base: 0 }}>
+        <Flex flexDir="column" height="full" align="start" justify="space-between">
+          <SideBarHeader />
+          <SideBarItem icon={<DarkModeToggle />}></SideBarItem>
+        </Flex>
+      </Box>
+    </Box>
   );
 }
