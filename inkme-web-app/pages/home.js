@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 export default function Home() {
   const { push } = useRouter();
   return (
-    <ImageLayout img="/rubberman.png">
+    <ImageLayout img="/home.png">
       <Center mt={{ base: 0, md: 12 }} flexDir="column" maxW="container.sm">
         <Text fontSize="6xl" fontWeight="black" align="center">
           Where Tattoos live

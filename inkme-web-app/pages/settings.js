@@ -2,14 +2,17 @@ import { AccountSettingsForm } from "@/components/form/AccountSettingsForm";
 import { AppearanceSettingsForm } from "@/components/form/AppearanceSettings";
 import { ProfileSettingsForm } from "@/components/form/ProfileSettingsForm";
 import { SecuritySettingsForm } from "@/components/form/SecuritySettingsForm";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { GridLayoutItem } from "@/components/layout/GridLayout";
 import { PrivatePageHeader } from "@/components/PrivatePageHeader";
+import { useDocument } from "@/firebase/hooks";
+import { ARTIST } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
-import { Alert, AlertDescription, AlertIcon, Box, Container, Link, SimpleGrid } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Box, Link } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
-function SideBar() {
+function SideBarLinks() {
   const { signOut } = useAuth();
   const { push } = useRouter();
 
@@ -19,51 +22,56 @@ function SideBar() {
   }, [signOut]);
 
   return (
-    <Box position={{ md: "fixed" }}>
-      <SimpleGrid gap={{ base: 4, md: 8 }} columns={{ base: 2, md: 1 }} mt={{ base: 4, md: 12 }} fontSize="sm">
-        <Link href="#profile">Profile Settings</Link>
-        <Link href="#security">Security & Privacy Settings</Link>
-        <Link href="#account">Account Settings</Link>
-        <Link href="#appearance">Appearance Settings</Link>
-        <Box pt={{ md: 6 }}>
-          <Link onClick={signOutHandler}>sign out</Link>
-        </Box>
-      </SimpleGrid>
-    </Box>
+    <>
+      <Link href="#profile">Profile Settings</Link>
+      <Link href="#security">Security & Privacy Settings</Link>
+      <Link href="#account">Account Settings</Link>
+      <Link href="#appearance">Appearance Settings</Link>
+      <Box pt={{ md: 6 }}>
+        <Link onClick={signOutHandler}>sign out</Link>
+      </Box>
+    </>
   );
 }
 
 export default function Settings() {
+  const { user } = useAuth();
+
+  const profileRef = useMemo(() => ARTIST(user?.uid), [user]);
+  const [profile] = useDocument(profileRef);
+
   return (
-    <>
-      <Container maxW="container.xl">
-        <SimpleGrid columns={{ base: 1, md: 2 }} templateColumns={{ base: "1fr", md: "240px auto" }}>
-          <GridLayoutItem>
-            <SideBar />
-          </GridLayoutItem>
-          <SimpleGrid columns={1} gap={16} mb={24} borderLeftWidth={{ md: 1 }}>
-            <GridLayoutItem>
-              <PrivatePageHeader title="Settings" link={<Link href="/me">dashboard</Link>} containerProps={{ px: 0 }} />
-            </GridLayoutItem>
-            <GridLayoutItem title="Profile Settings" id="profile" containerProps={{ pt: 24, mt: -24 }}>
-              <ProfileSettingsForm />
-            </GridLayoutItem>
-            <GridLayoutItem title="Security & Privacy Settings" id="security" containerProps={{ pt: 24, mt: -24 }}>
-              <SecuritySettingsForm />
-            </GridLayoutItem>
-            <GridLayoutItem title="Account Settings" id="account" containerProps={{ pt: 24, mt: -24 }}>
-              <Alert status="error" mt={4} fontSize="sm">
-                <AlertIcon />
-                <AlertDescription>this is the danger zone - be careful, in this section you can modify or even delete your account.</AlertDescription>
-              </Alert>
-              <AccountSettingsForm />
-            </GridLayoutItem>
-            <GridLayoutItem title="Appearance Settings" id="appearance" containerProps={{ pt: 24, mt: -24 }}>
-              <AppearanceSettingsForm />
-            </GridLayoutItem>
-          </SimpleGrid>
-        </SimpleGrid>
-      </Container>
-    </>
+    <DashboardLayout
+      header={
+        <PrivatePageHeader
+          title="Settings"
+          quickLinksTitle="Your Profile"
+          img={profile?.img}
+          link={<Link href="/me">dashboard</Link>}
+        ></PrivatePageHeader>
+      }
+      linkList={<SideBarLinks />}
+    >
+      <GridLayoutItem
+        title="Profile Settings"
+        subtitle="Your profile is the public profile others will actually see on this platform. In this section you can edit your public profile."
+        id="profile"
+      >
+        <ProfileSettingsForm />
+      </GridLayoutItem>
+      <GridLayoutItem title="Security & Privacy Settings" subtitle="" id="security">
+        <SecuritySettingsForm />
+      </GridLayoutItem>
+      <GridLayoutItem title="Account Settings" id="account">
+        <Alert status="error" mt={4} fontSize="sm" borderRadius="md">
+          <AlertIcon />
+          <AlertDescription>this is the danger zone - be careful, in this section you can modify or even delete your account.</AlertDescription>
+        </Alert>
+        <AccountSettingsForm />
+      </GridLayoutItem>
+      <GridLayoutItem title="Appearance Settings" id="appearance">
+        <AppearanceSettingsForm />
+      </GridLayoutItem>
+    </DashboardLayout>
   );
 }

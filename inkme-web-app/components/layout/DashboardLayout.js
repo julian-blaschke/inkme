@@ -1,4 +1,4 @@
-import { Box, Container, SimpleGrid } from "@chakra-ui/layout";
+import { Box, Container, SimpleGrid, Text } from "@chakra-ui/layout";
 import { GridLayoutItem } from "./GridLayout";
 
 /**
@@ -8,8 +8,11 @@ import { GridLayoutItem } from "./GridLayout";
  */
 function SideBar({ children }) {
   return (
-    <Box position={{ md: "fixed" }}>
-      <SimpleGrid gap={{ base: 4, md: 8 }} columns={{ base: 2, md: 1 }} mt={{ base: 4, md: 12 }} fontSize="sm">
+    <Box position={{ md: "fixed" }} mt={{ base: 4, md: 12 }}>
+      <Text color="gray.500" fontSize="xs" fontStyle="italic" mb={{ base: 6, md: 10 }}>
+        {"page links".toUpperCase()}
+      </Text>
+      <SimpleGrid gap={{ base: 4, md: 8 }} columns={{ base: 2, md: 1 }} fontSize="sm">
         {children}
       </SimpleGrid>
     </Box>
@@ -26,8 +29,8 @@ function SideBar({ children }) {
 export function DashboardLayout({ header, linkList, children }) {
   return (
     <Container maxW="container.xl">
-      <SimpleGrid columns={{ base: 1, md: 2 }} templateColumns={{ base: "1fr", md: "240px auto" }}>
-        <GridLayoutItem>
+      <SimpleGrid columns={{ base: 1, md: 2 }} templateColumns={{ base: "1fr", md: "200px auto" }}>
+        <GridLayoutItem containerProps={{ px: { md: 0 } }}>
           <SideBar>{linkList}</SideBar>
         </GridLayoutItem>
         <SimpleGrid columns={1} gap={16} mb={24} borderLeftWidth={{ md: 1 }}>

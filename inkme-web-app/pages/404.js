@@ -4,7 +4,7 @@ import NextLink from "next/link";
 
 export default function notFound() {
   return (
-    <ImageLayout img="/404.png">
+    <ImageLayout img="/crash.png">
       <Flex flexDir="column">
         <Text fontSize="9xl" fontWeight="black">
           404

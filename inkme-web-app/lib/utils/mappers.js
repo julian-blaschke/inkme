@@ -23,9 +23,9 @@ export function mapShops(shops) {
   return shops?.map((shop) => mapShop(shop));
 }
 
-export function mapShop({ name, img, address, _artists }) {
+export function mapShop({ name, img, address, _artists } = {}) {
   const artistsImgs = _artists?.map((artist) => artist.img);
-  return { title: name, subtitle: address, url: `/profile/shops/${name}`, img: img || artistsImgs };
+  return { title: name, subtitle: address, url: `/me/${name}`, img: img || artistsImgs };
 }
 
 export function mapPublicShops(shops) {

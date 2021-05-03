@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useBackGroundColorValue } from "@/styles/theme";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Stack } from "@chakra-ui/react";
+import { Flex, IconButton, Link, Stack } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { AnchorIcon } from "public/icons/anchor";
 import { useEffect, useState } from "react";

@@ -10,6 +10,15 @@
   font-display: swap;
 }
 
-.link:hover::after {
-  content: " 🔗";
+.anchor a {
+  position: absolute;
+  left: -30px;
+}
+
+.anchor a:hover {
+  text-decoration: none;
+}
+
+.anchor {
+  position: relative;
 }

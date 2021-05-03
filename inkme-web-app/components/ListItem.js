@@ -37,7 +37,7 @@ export function ListItem({ title, subtitle, img, url, badge, menu }) {
                 {title}
               </Text>
             )}
-            <Text fontSize="sm" color="bg.500" noOfLines={1}>
+            <Text fontSize="sm" color="gray.500" noOfLines={1}>
               {subtitle}
             </Text>
           </Flex>

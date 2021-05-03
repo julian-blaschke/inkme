@@ -3,7 +3,7 @@ import { extendTheme, useColorModeValue } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 export function useBackGroundColorValue() {
-  return useColorModeValue("white", "bg.900");
+  return useColorModeValue("white", "black");
 }
 
 export function useForeGroundColorValue() {
@@ -11,7 +11,7 @@ export function useForeGroundColorValue() {
 }
 
 export function useHoverColorValue() {
-  return useColorModeValue("gray.100", "bg.800");
+  return useColorModeValue("gray.100", "gray.900");
 }
 
 export const primaryColorScheme = "brand";
@@ -34,15 +34,15 @@ const colors = {
     100: "#FFF4E2",
   },
   brand: {
-    900: "#F3B32C",
-    800: "#F4B736",
-    700: "#F5BA40",
-    600: "#F5BE49",
-    500: "#F6C253",
-    400: "#F7C55D",
-    300: "#F8C967",
-    200: "#F8CC70",
-    100: "#F9D07A",
+    900: "#163847",
+    800: "#2D4F5E",
+    700: "#446675",
+    600: "#5B7D8C",
+    500: "#7394A3",
+    400: "#8AABBA",
+    300: "#A1C2D1",
+    200: "#B8D9E8",
+    100: "#CFF0FF",
   },
 };
 
@@ -50,10 +50,10 @@ const styles = {
   global: (props) => ({
     body: {
       color: mode("bg.900", "white")(props),
-      bg: mode("whiteAlpha", "bg.900")(props),
+      bg: mode("whiteAlpha", "black")(props),
     },
     "::selection": {
-      bg: mode("brand.100", "bg.200")(props),
+      bg: mode("brand.100", "brand.500")(props),
     },
   }),
 };
@@ -63,7 +63,7 @@ const components = {
     parts: ["dialog"],
     baseStyle: ({ colorMode }) => ({
       dialog: {
-        background: colorMode === "dark" ? "bg.900" : "white",
+        background: colorMode === "dark" ? "gray.900" : "white",
         mx: 4,
       },
     }),
@@ -72,14 +72,14 @@ const components = {
     parts: ["list", "item"],
     baseStyle: ({ colorMode }) => ({
       list: {
-        background: colorMode === "dark" ? "bg.900" : "white",
+        background: colorMode === "dark" ? "gray.900" : "white",
       },
       item: {
         _focus: {
-          background: colorMode === "dark" ? "bg.800" : "gray.50",
+          background: colorMode === "dark" ? "gray.800" : "gray.50",
         },
         _active: {
-          background: colorMode === "dark" ? "bg.700" : "gray.100",
+          background: colorMode === "dark" ? "gray.700" : "gray.100",
         },
       },
     }),

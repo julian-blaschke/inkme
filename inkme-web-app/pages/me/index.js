@@ -2,8 +2,8 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { GridLayoutItem } from "@/components/layout/GridLayout";
 import { List } from "@/components/List";
 import { PrivatePageHeader } from "@/components/PrivatePageHeader";
-import { useCollection } from "@/firebase/hooks";
-import { MY_GUEST_SPOTS, MY_INVITES, MY_SHOPS } from "@/firebase/queries";
+import { useCollection, useDocument } from "@/firebase/hooks";
+import { ARTIST, MY_GUEST_SPOTS, MY_INVITES, MY_SHOPS } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { SimpleGrid } from "@chakra-ui/layout";
 import { mapGuestSpots, mapMyInvites, mapShops } from "lib/utils/mappers";
@@ -22,6 +22,9 @@ function SideBarLinks() {
 export default function DashBoard() {
   const { user } = useAuth();
 
+  const profileRef = useMemo(() => ARTIST(user?.uid), [user]);
+  const [profile] = useDocument(profileRef);
+
   const shopsRef = useMemo(() => MY_SHOPS(user?.uid), [user]);
   const [shops, shopsLoading] = useCollection(shopsRef, "name");
 
@@ -33,7 +36,14 @@ export default function DashBoard() {
 
   return (
     <DashboardLayout
-      header={<PrivatePageHeader title="Dashboard" link={<Link href="settings">settings</Link>}></PrivatePageHeader>}
+      header={
+        <PrivatePageHeader
+          title="Dashboard"
+          quickLinksTitle="Your Profile"
+          img={profile?.img}
+          link={<Link href="settings">settings</Link>}
+        ></PrivatePageHeader>
+      }
       linkList={<SideBarLinks />}
     >
       <GridLayoutItem
@@ -46,7 +56,11 @@ export default function DashBoard() {
           <List columns={2} title="my guest spots" data={mapGuestSpots(guestSpots)} isLoading={guestSpotsLoading}></List>
         </SimpleGrid>
       </GridLayoutItem>
-      <GridLayoutItem id="invites" title="Invitations">
+      <GridLayoutItem
+        id="invites"
+        title="Invitations"
+        subtitle="This is your inbox for all pending invites to either join-, or have a guest spot at a shop."
+      >
         <SimpleGrid columns={{ xl: 2 }} gap={16} rowGap={20} spacing="12">
           <List title="invitations" data={mapMyInvites(invites)} isLoading={invitesLoading} gridProps={{ columns: { base: 1, md: 2, xl: 1 } }}></List>
         </SimpleGrid>

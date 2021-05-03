@@ -4,7 +4,7 @@ import NextLink from "next/link";
 
 function Error({ statusCode }) {
   return (
-    <ImageLayout img="/500.png">
+    <ImageLayout img="/crash.png">
       <Flex flexDir="column">
         <Text fontSize="9xl" fontWeight="black">
           {statusCode}

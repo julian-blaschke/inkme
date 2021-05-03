@@ -26,7 +26,7 @@ export default function SignIn() {
   if (user) return <LoggedInAlert></LoggedInAlert>;
 
   return (
-    <ImageLayout img="/sign-in.png">
+    <ImageLayout img="/bear.png">
       <Flex flexDir="column" maxW="md">
         <Heading as="h1" fontSize="5xl" fontWeight="black">
           Welcome Back!

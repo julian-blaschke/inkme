@@ -62,9 +62,9 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
   }
 
   return (
-    <Center py={4}>
-      <Button variant="link" size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
-        Send invite
+    <>
+      <Button variant="ghost" colorScheme={primaryColorScheme} size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
+        invite to guest spot
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -115,6 +115,6 @@ export function InviteArtistsToGuestSpotModal({ shop }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Center>
+    </>
   );
 }

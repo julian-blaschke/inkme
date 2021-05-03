@@ -9,7 +9,6 @@ import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control"
 import { useDisclosure } from "@chakra-ui/hooks";
 import { CheckIcon, SmallAddIcon, WarningIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Center } from "@chakra-ui/layout";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 import { Select } from "@chakra-ui/select";
 import { Spinner } from "@chakra-ui/spinner";
@@ -51,9 +50,9 @@ export function InviteArtistsToShopModal({ shop }) {
   }
 
   return (
-    <Center py={4}>
-      <Button variant="link" size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
-        Send invite
+    <>
+      <Button variant="ghost" colorScheme={primaryColorScheme} size="sm" leftIcon={<SmallAddIcon />} onClick={onOpen}>
+        invite to work here
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -99,6 +98,6 @@ export function InviteArtistsToShopModal({ shop }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Center>
+    </>
   );
 }

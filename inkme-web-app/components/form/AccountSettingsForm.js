@@ -1,7 +1,6 @@
 import { UPDATE_PROFILE } from "@/firebase/mutations";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "@/hooks/useForm";
-import { primaryColorScheme } from "@/styles/theme";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control";
 import { Switch } from "@chakra-ui/switch";
