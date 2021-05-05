@@ -1,4 +1,7 @@
-import { List, TwoListLayout } from "@/components/List";
+import { Avatar } from "@/components/Avatar";
+import { Section } from "@/components/layout/Section";
+import { SideBarLayout } from "@/components/layout/SideBarLayout";
+import { List } from "@/components/List";
 import { Header } from "@/components/PublicProfileHeader";
 import { admin } from "@/firebase/admin";
 import { Container, Divider } from "@chakra-ui/layout";
@@ -6,26 +9,29 @@ import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
 import { mapPublicArtists, mapPublicGuestSpotsShop, mapShop } from "lib/utils/mappers";
 import { useMemo } from "react";
 
-function MainContent({ artists, guestSpots }) {
-  const listsAreOfEqualLength = useMemo(() => artists?.length === guestSpots?.length, [artists, guestSpots]);
-
-  return (
-    <Container px={8} pb={8}>
-      <TwoListLayout listsAreOfEqualLength={listsAreOfEqualLength}>
-        {artists?.length > 0 && <List title="artists working here" columns={listsAreOfEqualLength ? 1 : 2} data={artists}></List>}
-        {guestSpots?.length > 0 && <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={guestSpots}></List>}
-      </TwoListLayout>
-    </Container>
-  );
-}
+const sublinks = [
+  { href: "#guestspots", title: "Guest Spots" },
+  { href: "#artists", title: "Artists" },
+  { href: "#posts", title: "Posts" },
+];
 
 export default function Artist({ shop, artists, guestSpots }) {
+  const { title, img } = shop;
   return (
-    <>
-      <Header title={shop.title} subtitle={shop.subtitle} img={shop.img} />
-      <Divider py={4} />
-      <MainContent {...{ artists, guestSpots }} />
-    </>
+    <SideBarLayout links={[{ href: `/shops/${title}`, title, sublinks }]}>
+      <Section variant="h1" title={title} rightElement={<Avatar img={img} />} />
+      <Section id="guestspots" title="Guest Spots" subtitle="Check out upcoming guest spots from other artists.">
+        <List maxCols={3} title="upcoming guestpots" data={guestSpots}></List>
+      </Section>
+      <Section
+        id="artists"
+        title="Artists working here"
+        subtitle="Check out who is currently working here. You can also go down the rabbithole & check out these artists and other shops that they are working at."
+      >
+        <List maxCols={3} title="shops" data={artists} />
+      </Section>
+      <Section id="posts" title="Instagram Posts" subtitle="Check out Instagram posts."></Section>
+    </SideBarLayout>
   );
 }
 

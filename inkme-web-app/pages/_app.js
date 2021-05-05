@@ -16,7 +16,6 @@ export default function InkmeApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
       <ProvideAuth>
-        <NavBar />
         <Component {...pageProps} />
       </ProvideAuth>
     </ChakraProvider>

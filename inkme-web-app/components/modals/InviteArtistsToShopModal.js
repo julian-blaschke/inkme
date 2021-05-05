@@ -56,7 +56,7 @@ export function InviteArtistsToShopModal({ shop }) {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent as="form" onSubmit={onSubmit}>
           <ModalHeader>Add other artists to this shop</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -92,7 +92,7 @@ export function InviteArtistsToShopModal({ shop }) {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme={primaryColorScheme} size="sm" isLoading={isSubmitting} onClick={onSubmit} disabled={!artist}>
+            <Button type="submit" colorScheme={primaryColorScheme} size="sm" isLoading={isSubmitting} disabled={!artist}>
               send invite
             </Button>
           </ModalFooter>

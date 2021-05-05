@@ -15,9 +15,10 @@ export default function notFound() {
         <Center flexDir="column" alignItems="start" spacing={4} maxW="sm">
           <Text color="bg.500">
             The page you're looking for does not exist. Lets get you{" "}
-            <NextLink href="/home">
-              <Link>back home.</Link>
+            <NextLink href="/">
+              <Link color="blue.500">back home</Link>
             </NextLink>
+            {"."}
           </Text>
         </Center>
       </Flex>

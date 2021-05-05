@@ -1,26 +1,22 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { GridLayoutItem } from "@/components/layout/GridLayout";
+import { Avatar } from "@/components/Avatar";
+import { Section } from "@/components/layout/Section";
+import { SideBarLayout } from "@/components/layout/SideBarLayout";
 import { List } from "@/components/List";
 import { InviteArtistsToGuestSpotModal } from "@/components/modals/InviteArtistsToGuestSpotModal";
 import { InviteArtistsToShopModal } from "@/components/modals/InviteArtistsToShopModal";
-import { PrivatePageHeader } from "@/components/PrivatePageHeader";
 import { useCollection, useDocument } from "@/firebase/hooks";
 import { ALL_GUEST_SPOTS, ALL_INVITES, SHOP } from "@/firebase/queries";
-import { Link, SimpleGrid } from "@chakra-ui/layout";
+import { SimpleGrid } from "@chakra-ui/layout";
 import { mapInvites, mapPublicArtists, mapPublicGuestSpotsShop, mapShop } from "lib/utils/mappers";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-function SideBarLinks() {
-  return (
-    <>
-      <Link href="#artists">Artists</Link>
-      <Link href="#guestspots">Guest spots</Link>
-      <Link href="#invites">Invitations</Link>
-    </>
-  );
-}
+const sublinks = [
+  { href: "#artists", title: "Artists" },
+  { href: "#guestspots", title: "Guest spots" },
+  { href: "#invites", title: "Invitations" },
+  { href: "#settings", title: "Settings" },
+];
 
 export default function MyShop() {
   const { shopname } = useRouter().query;
@@ -34,33 +30,24 @@ export default function MyShop() {
   const invitesRef = useMemo(() => ALL_INVITES(shopname), [shopname]);
   const [invites, invitesLoading] = useCollection(invitesRef, "username");
 
+  const shopLinks = useMemo(() => [{ title: shop?.name, href: `/me/${shop?.name}`, sublinks }], [shop]);
+
   return (
-    <DashboardLayout
-      header={
-        <PrivatePageHeader
-          title={shopname}
-          quickLinksTitle="Shop"
-          img={mapShop(shop)?.img}
-          link={<NextLink href={`/me/${shopname}/settings`}>settings</NextLink>}
-        />
-      }
-      linkList={<SideBarLinks />}
-    >
-      <GridLayoutItem
+    <SideBarLayout links={shopLinks}>
+      <Section title={shop?.name} variant="h1" rightElement={<Avatar img={mapShop(shop)?.img} />}></Section>
+      <Section
         id="artists"
         title="Artists working here"
         subtitle="Here are all artists listed that currently work at this shop, whatever their role may be."
-        rightItem={<InviteArtistsToShopModal shop={shopname} />}
+        rightElement={<InviteArtistsToShopModal shop={shopname} />}
       >
-        <SimpleGrid columns={1} gap={{ md: 16 }} spacing="12">
-          <List title="artists" data={mapPublicArtists(shop?._artists)} isLoading={shopLoading} gridProps={{ columns: { base: 1, sm: 2 } }}></List>
-        </SimpleGrid>
-      </GridLayoutItem>
-      <GridLayoutItem
+        <List maxCols={3} title="artists" data={mapPublicArtists(shop?._artists)} isLoading={shopLoading} />
+      </Section>
+      <Section
         id="guestspots"
         title="Guest Spots here"
         subtitle="Here are upcoming, as well as past guestspots listed. It is here where you can modify & cancel upcoming guest spots."
-        rightItem={<InviteArtistsToGuestSpotModal />}
+        rightElement={<InviteArtistsToGuestSpotModal />}
       >
         <SimpleGrid columns={1} gap={{ md: 4 }} spacing="12">
           <List
@@ -76,16 +63,17 @@ export default function MyShop() {
             gridProps={{ columns: { base: 1, sm: 2 } }}
           ></List>
         </SimpleGrid>
-      </GridLayoutItem>
-      <GridLayoutItem
+      </Section>
+      <Section
         id="invites"
         title="Invitations"
         subtitle="All invites sent of this shop are listed here. Artists can be invited to either work-, or to have a guest spot at this shop. (Tip: delete an invitation once it has been accepted/rejected. Otherwise, it will take up unnecessary space)"
       >
         <SimpleGrid columns={1} gap={{ md: 16 }} spacing="12">
-          <List title="invitations" data={mapInvites(invites)} isLoading={invitesLoading} gridProps={{ columns: { base: 1, xl: 2 } }}></List>
+          <List maxCols={3} title="invitations" data={mapInvites(invites)} isLoading={invitesLoading}></List>
         </SimpleGrid>
-      </GridLayoutItem>
-    </DashboardLayout>
+      </Section>
+      <Section id="settings" title="Settings" subtitle="Manage shop preferences."></Section>
+    </SideBarLayout>
   );
 }

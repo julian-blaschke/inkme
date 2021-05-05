@@ -3,7 +3,7 @@ import { extendTheme, useColorModeValue } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 export function useBackGroundColorValue() {
-  return useColorModeValue("white", "black");
+  return useColorModeValue("white", "gray.900");
 }
 
 export function useForeGroundColorValue() {
@@ -11,7 +11,7 @@ export function useForeGroundColorValue() {
 }
 
 export function useHoverColorValue() {
-  return useColorModeValue("gray.100", "gray.900");
+  return useColorModeValue("gray.200", "gray.700");
 }
 
 export const primaryColorScheme = "brand";
@@ -49,8 +49,8 @@ const colors = {
 const styles = {
   global: (props) => ({
     body: {
-      color: mode("bg.900", "white")(props),
-      bg: mode("whiteAlpha", "black")(props),
+      color: mode("bg.900", "gray.100")(props),
+      bg: mode("whiteAlpha", "gray.900")(props),
     },
     "::selection": {
       bg: mode("brand.100", "brand.500")(props),

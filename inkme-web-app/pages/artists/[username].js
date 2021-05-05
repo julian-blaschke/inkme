@@ -1,34 +1,34 @@
-import { List, TwoListLayout } from "@/components/List";
-import { Header } from "@/components/PublicProfileHeader";
+import { Avatar } from "@/components/Avatar";
+import { Section } from "@/components/layout/Section";
+import { SideBarLayout } from "@/components/layout/SideBarLayout";
+import { List } from "@/components/List";
 import { admin } from "@/firebase/admin";
-import { Container, Divider } from "@chakra-ui/layout";
 import { mapFirestoreCol, mapFirestoreDoc } from "lib/utils/helpers";
 import { mapPublicGuestSpotsArtist, mapShopsArtist } from "lib/utils/mappers";
-import { useMemo } from "react";
 
-function MainContent({ shops, guestSpots }) {
-  const listsAreOfEqualLength = useMemo(() => shops?.length === guestSpots?.length, [shops, guestSpots]);
-
-  return (
-    <>
-      <Container px={8} pb={8}>
-        <TwoListLayout listsAreOfEqualLength={listsAreOfEqualLength}>
-          {shops?.length > 0 && <List title="currently works at" columns={listsAreOfEqualLength ? 1 : 2} data={shops}></List>}
-          {guestSpots?.length > 0 && <List title="current guestspots" columns={listsAreOfEqualLength ? 1 : 2} data={guestSpots}></List>}
-        </TwoListLayout>
-      </Container>
-    </>
-  );
-}
+const sublinks = [
+  { href: "#guestspots", title: "Guest Spots" },
+  { href: "#shops", title: "Shops" },
+  { href: "#posts", title: "Posts" },
+];
 
 export default function Artist({ artist, shops, guestSpots }) {
   const { username, bio, img } = artist;
   return (
-    <>
-      <Header title={username} subtitle={bio} img={img} />
-      <Divider py={4} />
-      <MainContent {...{ shops, guestSpots }} />
-    </>
+    <SideBarLayout links={[{ href: `/artists/${username}`, title: username, sublinks }]}>
+      <Section variant="h1" title={username} subtitle={bio} rightElement={<Avatar img={img} />} />
+      <Section id="guestspots" title="Guest Spots" subtitle={`Check out where & when ${username} is going to be guest-spotting at.`}>
+        <List maxCols={3} title="upcoming guestpots" data={guestSpots}></List>
+      </Section>
+      <Section
+        id="shops"
+        title="Shops"
+        subtitle={`Check out where ${username} is currently working at. You can also go down the rabbithole & check out these Shops and other artists that are working at this Shop.`}
+      >
+        <List maxCols={3} title="shops" data={shops} />
+      </Section>
+      <Section id="posts" title="Instagram Posts" subtitle={`Check out ${username}'s work via Instagram.`}></Section>
+    </SideBarLayout>
   );
 }
 

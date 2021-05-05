@@ -1,23 +1,12 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { GridLayoutItem } from "@/components/layout/GridLayout";
+import { Avatar } from "@/components/Avatar";
+import { Section } from "@/components/layout/Section";
+import { SideBarLayout } from "@/components/layout/SideBarLayout";
 import { List } from "@/components/List";
-import { PrivatePageHeader } from "@/components/PrivatePageHeader";
 import { useCollection, useDocument } from "@/firebase/hooks";
 import { ARTIST, MY_GUEST_SPOTS, MY_INVITES, MY_SHOPS } from "@/firebase/queries";
 import { useAuth } from "@/hooks/useAuth";
-import { SimpleGrid } from "@chakra-ui/layout";
 import { mapGuestSpots, mapMyInvites, mapShops } from "lib/utils/mappers";
-import Link from "next/link";
 import { useMemo } from "react";
-
-function SideBarLinks() {
-  return (
-    <>
-      <Link href="#shops">Shops & Guest spots</Link>
-      <Link href="#invites">Invitations</Link>
-    </>
-  );
-}
 
 export default function DashBoard() {
   const { user } = useAuth();
@@ -35,36 +24,30 @@ export default function DashBoard() {
   const [invites, invitesLoading] = useCollection(invitesRef, "username");
 
   return (
-    <DashboardLayout
-      header={
-        <PrivatePageHeader
-          title="Dashboard"
-          quickLinksTitle="Your Profile"
-          img={profile?.img}
-          link={<Link href="settings">settings</Link>}
-        ></PrivatePageHeader>
-      }
-      linkList={<SideBarLinks />}
-    >
-      <GridLayoutItem
+    <SideBarLayout>
+      <Section title="Dashboard" variant="h1" rightElement={<Avatar img={profile?.img} />} />
+      <Section
         id="shops"
-        title="Shops & Guest spots"
+        title="My Shops"
         subtitle="Here are your current shops & upcomming guestspots listed. You can view every shop individually to manage settings or adjust dates/cancel any upcomming guestspot."
       >
-        <SimpleGrid columns={{ xl: 2 }} gap={{ md: 16 }} spacing="12">
-          <List title="my shops" data={mapShops(shops)} isLoading={shopsLoading} gridProps={{ columns: { base: 1, md: 2, xl: 1 } }}></List>
-          <List columns={2} title="my guest spots" data={mapGuestSpots(guestSpots)} isLoading={guestSpotsLoading}></List>
-        </SimpleGrid>
-      </GridLayoutItem>
-      <GridLayoutItem
+        <List title="my shops" data={mapShops(shops)} isLoading={shopsLoading} maxCols={3} />
+      </Section>
+      <Section
+        id="guestspots"
+        title="My Guest spots"
+        subtitle="Here are your current shops & upcomming guestspots listed. You can view every shop individually to manage settings or adjust dates/cancel any upcomming guestspot."
+      >
+        <List maxCols={3} title="upcoming guestspots" data={mapGuestSpots(guestSpots)} isLoading={guestSpotsLoading}></List>
+        <List maxCols={3} title="guestspots from last month" data={mapGuestSpots(guestSpots)} isLoading={guestSpotsLoading}></List>
+      </Section>
+      <Section
         id="invites"
         title="Invitations"
         subtitle="This is your inbox for all pending invites to either join-, or have a guest spot at a shop."
       >
-        <SimpleGrid columns={{ xl: 2 }} gap={16} rowGap={20} spacing="12">
-          <List title="invitations" data={mapMyInvites(invites)} isLoading={invitesLoading} gridProps={{ columns: { base: 1, md: 2, xl: 1 } }}></List>
-        </SimpleGrid>
-      </GridLayoutItem>
-    </DashboardLayout>
+        <List maxCols={3} title="invitations" data={mapMyInvites(invites)} isLoading={invitesLoading}></List>
+      </Section>
+    </SideBarLayout>
   );
 }

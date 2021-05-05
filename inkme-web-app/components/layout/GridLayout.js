@@ -27,8 +27,8 @@ export function GridLayoutItem({ children, title, subtitle, id, rightItem, conta
         <Flex flexDir="column" pr={4}>
           <Flex alignItems="center" className="anchor">
             {id && (
-              <Link href={"#".concat(id)} display={{ base: "none", md: "inline-block" }}>
-                🔗
+              <Link href={"#".concat(id)} display={{ base: "none", md: "inline-block" }} fontWeight="black" fontSize="xl" _focus={{}}>
+                #
               </Link>
             )}
             {title && (
@@ -37,15 +37,11 @@ export function GridLayoutItem({ children, title, subtitle, id, rightItem, conta
               </Heading>
             )}
           </Flex>
-          {subtitle && (
-            <Text color="gray.500" fontSize="sm">
-              {subtitle}
-            </Text>
-          )}
+          {subtitle && <Text fontSize="sm">{subtitle}</Text>}
         </Flex>
         {rightItem}
       </Flex>
-      {children}
+      <Box py={8}>{children}</Box>
     </Flex>
   );
 }

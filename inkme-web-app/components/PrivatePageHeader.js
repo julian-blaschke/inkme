@@ -30,7 +30,7 @@ export function PrivatePageHeader({ title, subtitle, img, quickLinksTitle, link,
     <Container py={8} px={0} maxW="container.xl" borderBottomWidth={2} {...containerProps}>
       <Flex direction={{ base: "column-reverse", md: "row" }} justify="space-between" align={{ base: "start", md: "center" }}>
         <Stack spacing={2}>
-          <Heading align="start" as="h1" fontSize="5xl" fontWeight="black" mt={{ base: 4, md: 0 }} isTruncated>
+          <Heading align="start" as="h1" fontSize="4xl" fontWeight="black" mt={{ base: 4, md: 0 }} isTruncated>
             {title}
           </Heading>
           {subtitle && <Text color="gray.500">{subtitle}</Text>}
